@@ -10,24 +10,24 @@
 
     <ImageView
         android:id="@+id/imageView4"
-        android:layout_width="match_parent"
-        android:layout_height="449dp"
+        android:layout_width="621dp"
+        android:layout_height="402dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:srcCompat="@tools:sample/backgrounds/scenic" />
+        tools:srcCompat="@drawable/devon_janse_van_rensburg_nxakhtq1j6c_unsplash" />
 
     <ImageView
         android:id="@+id/imageView5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="@+id/imageView4"
+        android:layout_width="150dp"
+        android:layout_height="149dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0"
-        tools:srcCompat="@tools:sample/avatars" />
+        app:layout_constraintTop_toTopOf="@+id/imageView4"
+        app:layout_constraintVertical_bias="0.546"
+        tools:srcCompat="@drawable/logo_new_sample_2" />
 
     <Button
         android:id="@+id/button3"
@@ -46,14 +46,11 @@
         android:id="@+id/button4"
         android:layout_width="326dp"
         android:layout_height="44dp"
-        android:layout_marginTop="64dp"
         android:gravity="center"
         android:text="Sign in"
         app:backgroundTint="@color/white"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView4" />
+        tools:layout_editor_absoluteX="43dp"
+        tools:layout_editor_absoluteY="513dp" />
 
     <Button
         android:id="@+id/button2"
