@@ -10,24 +10,28 @@
 
     <ImageView
         android:id="@+id/imageView4"
-        android:layout_width="match_parent"
-        android:layout_height="449dp"
+        android:layout_width="563dp"
+        android:layout_height="386dp"
+        android:contentDescription="TODO"
+        android:src="@drawable/devon_janse_van_rensburg_nxakhtq1j6c_unsplash"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:srcCompat="@tools:sample/backgrounds/scenic" />
+        app:layout_constraintVertical_bias="0.0" />
 
     <ImageView
         android:id="@+id/imageView5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="@+id/imageView4"
+        android:layout_width="150dp"
+        android:layout_height="149dp"
+        android:src="@drawable/logo_new_sample_2"
+        app:layout_constraintBottom_toTopOf="@+id/button4"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0"
-        tools:srcCompat="@tools:sample/avatars" />
+        app:layout_constraintVertical_bias="0.792" />
 
     <Button
         android:id="@+id/button3"
@@ -46,12 +50,12 @@
         android:id="@+id/button4"
         android:layout_width="326dp"
         android:layout_height="44dp"
-        android:layout_marginTop="64dp"
+        android:layout_marginTop="100dp"
         android:gravity="center"
         android:text="Sign in"
         app:backgroundTint="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_bias="0.494"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView4" />
 
@@ -59,13 +63,24 @@
         android:id="@+id/button2"
         android:layout_width="325dp"
         android:layout_height="47dp"
-        android:layout_marginBottom="52dp"
         android:gravity="center"
         android:text="Open the tour"
         android:textColor="#FFFFFF"
         app:backgroundTint="#252627"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintHorizontal_bias="0.488"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button4"
+        app:layout_constraintVertical_bias="0.743" />
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNavigationView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#313335"
+        app:itemIconTint="@android:color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:menu="@menu/bottom_nav_menu" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
