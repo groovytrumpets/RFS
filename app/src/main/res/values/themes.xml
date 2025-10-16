@@ -2,6 +2,8 @@
     <!-- Base application theme. -->
     <style name="Base.Theme.RFS" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
+        <item name="colorPrimary">#7EBDC2</item> <item name="colorOnPrimary">#252627</item>
+
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
     </style>
 

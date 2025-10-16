@@ -12,6 +12,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.RFS">
         <activity
+            android:name=".authentication.CreateAccountActivity"
+            android:exported="false" />
+        <activity
+            android:name=".authentication.LoginActivity"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
