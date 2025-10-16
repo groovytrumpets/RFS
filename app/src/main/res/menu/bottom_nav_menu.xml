@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:title=""
+        android:id="@+id/account_navbar"
+        android:icon="@drawable/user_lock"/>
+    <item android:title=""
+        android:id="@+id/home_navbar"
+        android:icon="@drawable/clapperboard_question_mark"/>
+    <item android:title=""
+        android:id="@+id/search_navbar"
+        android:icon="@drawable/search"/>
+</menu>
