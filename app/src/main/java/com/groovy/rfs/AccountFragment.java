@@ -1,5 +1,6 @@
 package com.groovy.rfs;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -7,6 +8,9 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+
+import com.groovy.rfs.authentication.CreateAccountActivity;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -14,6 +18,9 @@ import android.view.ViewGroup;
  * create an instance of this fragment.
  */
 public class AccountFragment extends Fragment {
+    Button createAcc_btn;
+    Button signIn_btn;
+    Button tour_btn;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -59,6 +66,20 @@ public class AccountFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_account, container, false);
+        View view = inflater.inflate(R.layout.fragment_account, container, false);
+        // Inflate the layout for this fragment
+        createAcc_btn = view.findViewById(R.id.createAcc_btn);
+        signIn_btn = view.findViewById(R.id.signIn_btn);
+        tour_btn = view.findViewById(R.id.tour_btn);
+
+        createAcc_btn.setOnClickListener(v -> {
+            Intent createAccIntent = new Intent(getActivity(), CreateAccountActivity.class);
+            startActivity(createAccIntent);
+
+
+
+        });
+
+        return view;
     }
 }
