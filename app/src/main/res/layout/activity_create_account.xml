@@ -41,8 +41,9 @@
         android:backgroundTint="@color/white"
         android:ems="10"
         android:inputType="text"
-        android:text="Username"
+        android:hint="Username"
         android:textColor="#BDBDBD"
+        android:textColorHint="#BDBDBD"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
@@ -55,9 +56,11 @@
         android:layout_marginTop="12dp"
         android:backgroundTint="@color/white"
         android:ems="10"
-        android:inputType="text"
-        android:text="Password"
+        android:inputType="textPassword"
+        android:hint="Password"
+
         android:textColor="#BDBDBD"
+        android:textColorHint="#BDBDBD"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
@@ -71,8 +74,9 @@
         android:backgroundTint="@color/white"
         android:ems="10"
         android:inputType="text"
-        android:text="Email adress"
+        android:hint="Email adress"
         android:textColor="#BDBDBD"
+        android:textColorHint="#BDBDBD"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
@@ -94,10 +98,10 @@
         app:layout_constraintVertical_bias="0.076" />
 
     <Button
-        android:id="@+id/signin_btn"
+        android:id="@+id/signinWthGG_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Sign in"
+        android:text="Sign in GG+"
         app:backgroundTint="#F3DFA2"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/join_btn"
@@ -116,7 +120,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/signin_btn"
+        app:layout_constraintStart_toEndOf="@+id/signinWthGG_btn"
         app:layout_constraintTop_toBottomOf="@+id/checkBoxAgeCreate"
         app:layout_constraintVertical_bias="0.304" />
 
