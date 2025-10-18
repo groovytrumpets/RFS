@@ -21,58 +21,76 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0" />
 
+
     <ImageView
         android:id="@+id/imageView5"
         android:layout_width="150dp"
         android:layout_height="149dp"
+        android:layout_marginTop="260dp"
         android:src="@drawable/logo_new_sample_2"
-        app:layout_constraintBottom_toTopOf="@+id/signIn_btn"
+        app:layout_constraintBottom_toTopOf="@+id/username_signin"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.792" />
+        app:layout_constraintTop_toTopOf="@+id/imageView4"
+        app:layout_constraintVertical_bias="0.449" />
 
-    <Button
-        android:id="@+id/createAcc_btn"
-        android:layout_width="325dp"
-        android:layout_height="45dp"
-        android:gravity="center"
-        android:text="Create account"
-        app:backgroundTint="#F3DFA2"
-        app:layout_constraintBottom_toTopOf="@+id/tour_btn"
+    <EditText
+        android:id="@+id/username_signin"
+        android:layout_width="368dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="92dp"
+        android:backgroundTint="@color/white"
+        android:ems="10"
+        android:hint="Username or Email"
+        android:inputType="text"
+        android:textColor="#BDBDBD"
+        android:textColorHint="#BDBDBD"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/signIn_btn"
-        app:layout_constraintVertical_bias="0.2" />
-
-    <Button
-        android:id="@+id/signIn_btn"
-        android:layout_width="326dp"
-        android:layout_height="44dp"
-        android:layout_marginTop="100dp"
-        android:gravity="center"
-        android:text="Sign in"
-        app:backgroundTint="@color/white"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.494"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView4" />
 
+    <EditText
+        android:id="@+id/password_signin"
+        android:layout_width="368dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="12dp"
+        android:backgroundTint="@color/white"
+        android:ems="10"
+        android:hint="Password"
+        android:inputType="textPassword"
+
+        android:textColor="#BDBDBD"
+        android:textColorHint="#BDBDBD"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/username_signin" />
+
     <Button
-        android:id="@+id/tour_btn"
-        android:layout_width="325dp"
-        android:layout_height="47dp"
-        android:layout_marginTop="52dp"
-        android:gravity="center"
-        android:text="Open the tour"
+        android:id="@+id/signinWthGG_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sign in GG+"
+        app:backgroundTint="#F3DFA2"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/go_btn"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/password_signin" />
+
+    <Button
+        android:id="@+id/go_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="GO"
         android:textColor="#FFFFFF"
-        app:backgroundTint="#252627"
+        app:backgroundTint="#BB4430"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.488"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/signIn_btn"
-        app:layout_constraintVertical_bias="0.323" />
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/signinWthGG_btn"
+        app:layout_constraintTop_toBottomOf="@+id/password_signin" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

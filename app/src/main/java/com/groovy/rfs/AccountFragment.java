@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.groovy.rfs.authentication.CreateAccountActivity;
+import com.groovy.rfs.authentication.LoginActivity;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -75,10 +76,12 @@ public class AccountFragment extends Fragment {
         createAcc_btn.setOnClickListener(v -> {
             Intent createAccIntent = new Intent(getActivity(), CreateAccountActivity.class);
             startActivity(createAccIntent);
-
-
-
         });
+        signIn_btn.setOnClickListener(v -> {
+            Intent signinAccIntent = new Intent(getActivity(), LoginActivity.class);
+            startActivity(signinAccIntent);
+        });
+
 
         return view;
     }
