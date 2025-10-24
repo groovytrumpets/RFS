@@ -206,13 +206,19 @@ public class LoginActivity extends AppCompatActivity {
                 if (response.isSuccessful() && response.body() != null) {
                     SevResUser svrResponse = response.body();
                     Toast.makeText(context, svrResponse.getMessage(), Toast.LENGTH_LONG).show();
-
+                    Log.d("LOGIN_DEBUG", "Server response received. Success flag: " + svrResponse.getIsSuccess());
+                    // Log 1: Check success value
 
                     if (svrResponse.getIsSuccess() == 1) {
                         String token = svrResponse.getToken();
                         User user = svrResponse.getUser();
+                        Log.d("AUTH_SAVE", "User load from api:"+svrResponse.toString());
+                        Log.d("LOGIN_DEBUG", "Success flag is 1. Token: " + (token != null ? "exists" : "NULL"));
+                        // Log 2: Check if token exists
 
                         if (token != null) {
+                            Log.d("LOGIN_DEBUG", "Token is valid. Saving token and navigating...");
+                            // Log 3: Confirm before navigation
                             saveToken(token);
                             saveUserInfo(user);
                             // Chuyển sang MainActivity
@@ -221,12 +227,14 @@ public class LoginActivity extends AppCompatActivity {
                             setResult(Activity.RESULT_OK);
                             finish();
                         } else {
-                            Log.e("AUTH", "Login successful but token is null!");
+                            Log.e("LOGIN_DEBUG", "Success flag is NOT 1! Navigation skipped.");
+                            // Log if success flag is wrong
                             Toast.makeText(context, "Lỗi: Không nhận được token", Toast.LENGTH_SHORT).show();
                         }
                     } // Không cần else ở đây vì Toast báo lỗi đã hiển thị ở trên rồi
                 } else {
                     // Log lỗi chi tiết hơn
+                    Log.e("LOGIN_DEBUG", "Response not successful or body is null. Code: " + response.code());
                     Log.e("API_ERROR", "Login failed! Code: " + response.code() + ", Message: " + response.message());
                     Toast.makeText(context, "Lỗi đăng nhập từ server (Code: " + response.code() + ")", Toast.LENGTH_SHORT).show();
                 }
@@ -234,6 +242,7 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<SevResUser> call, Throwable t) {
+                Log.e("LOGIN_DEBUG", "API call failed: " + t.getMessage(), t);
                 Log.e("API_ERROR", "Login onFailure: " + t.getMessage(), t);
                 Toast.makeText(context, "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
