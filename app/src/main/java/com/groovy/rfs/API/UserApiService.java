@@ -19,4 +19,12 @@ public interface UserApiService {
     @FormUrlEncoded
     @POST("google_auth.php") // Trỏ đến file API mới
     Call<SevResUser> loginWithGoogle(@Field("id_token") String idToken);
+
+    //THÊM PHƯƠNG THỨC ĐĂNG NHẬP
+    @FormUrlEncoded
+    @POST("login.php") // Endpoint mới cho đăng nhập
+    Call<SevResUser> loginUser( // Assuming SevResUser can hold token and user data
+                                @Field("identifier") String identifier,
+                                @Field("password") String password
+    );
 }

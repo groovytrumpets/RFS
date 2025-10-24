@@ -24,6 +24,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 import com.groovy.rfs.API.UserApiService;
+import com.groovy.rfs.MainActivity;
 import com.groovy.rfs.R;
 import com.groovy.rfs.model.SevResUser;
 import com.groovy.rfs.model.User;
@@ -137,6 +138,11 @@ public class CreateAccountActivity extends AppCompatActivity {
 
             // ✅ GỬI idToken NÀY LÊN SERVER CỦA BẠN ĐỂ XÁC THỰC
             sendTokenToServer(idToken);
+            // Chuyển sang MainActivity
+            Intent intent = new Intent(CreateAccountActivity.this, MainActivity.class);
+            startActivity(intent);
+            setResult(Activity.RESULT_OK);
+            finish();
 
         } catch (ApiException e) {
             // Đăng nhập thất bại

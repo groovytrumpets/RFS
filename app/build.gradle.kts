@@ -41,6 +41,12 @@ dependencies {
     implementation("com.google.android.material:material:1.13.0")
 
     implementation("com.google.android.gms:play-services-auth:21.2.0")
+
+    //bao mat token luu tren andorid
+    implementation("androidx.security:security-crypto:1.1.0-alpha06")
+
+    //
+    implementation("com.github.bumptech.glide:glide:5.0.5")
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)

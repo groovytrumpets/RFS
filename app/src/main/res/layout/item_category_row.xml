@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="#000000"
+    android:orientation="vertical"
+    android:paddingTop="8dp"
+    android:paddingBottom="8dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="home_blank_fragment"
+        android:textColor="@color/white"
+        android:textSize="25dp" />
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/horizontal_movie_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" android:orientation="horizontal" app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        android:clipToPadding="false"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        tools:listitem="@layout/item_movie_card"
+        tools:layout_height="190dp"/>
+
+</LinearLayout>
