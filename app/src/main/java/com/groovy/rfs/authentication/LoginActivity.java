@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge; // Có thể không cần nếu dùng setOnApplyWindowInsetsListener
@@ -44,10 +45,11 @@ import java.io.IOException;
 import java.security.GeneralSecurityException;
 
 public class LoginActivity extends AppCompatActivity {
+
     EditText identifierInput; // Đổi tên để rõ ràng hơn (nhận cả username/email)
     EditText passwordInput;
     Button goButton,signByGG;
-    // Button signByGG; // Nếu có nút đăng nhập Google
+    ImageButton cancel_btn;
     Context context = this;
     GoogleSignInClient mGoogleSignInClient;
     private final ActivityResultLauncher<Intent> signInLauncher = registerForActivityResult(
@@ -71,6 +73,10 @@ public class LoginActivity extends AppCompatActivity {
         });
 
         // Ánh xạ
+        cancel_btn = findViewById(R.id.btn_cancel);
+        cancel_btn.setOnClickListener(v -> {
+            finish();
+        });
         identifierInput = findViewById(R.id.username_signin); // Đảm bảo ID đúng
         passwordInput = findViewById(R.id.password_signin);
         goButton = findViewById(R.id.go_btn);
@@ -219,6 +225,7 @@ public class LoginActivity extends AppCompatActivity {
                         if (token != null) {
                             Log.d("LOGIN_DEBUG", "Token is valid. Saving token and navigating...");
                             // Log 3: Confirm before navigation
+                            Log.d("LOGIN_DEBUG","USER_TOKEN:"+token);
                             saveToken(token);
                             saveUserInfo(user);
                             // Chuyển sang MainActivity
@@ -263,6 +270,7 @@ public class LoginActivity extends AppCompatActivity {
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString("user_fullname", user.getUsername()); // Ví dụ lưu tên
         editor.putString("user_email", user.getEmail());     // Ví dụ lưu email
+        editor.putInt("user_id", user.getIdUser());           // Ví dụ lưu ID")
         // Thêm các trường khác nếu cần
         editor.apply();
         Log.d("AUTH_SAVE", "User info saved to SharedPreferences. FullName: " + username);

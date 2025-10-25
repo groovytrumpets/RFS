@@ -1,8 +1,10 @@
 package com.groovy.rfs.authentication;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
+import android.widget.ImageButton;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,6 +18,9 @@ public class AuthActivity extends AppCompatActivity {
     Button createAcc_btn;
     Button signIn_btn;
     Button tour_btn;
+    ImageButton cancel_btn;
+
+    @SuppressLint("WrongViewCast")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,6 +34,10 @@ public class AuthActivity extends AppCompatActivity {
         createAcc_btn = findViewById(R.id.createAcc_btn);
         signIn_btn = findViewById(R.id.signIn_btn);
         tour_btn = findViewById(R.id.tour_btn);
+        cancel_btn = findViewById(R.id.btn_cancel);
+        cancel_btn.setOnClickListener(v -> {
+            finish();
+        });
 
         createAcc_btn.setOnClickListener(v -> {
             Intent createAccIntent = new Intent(AuthActivity.this, CreateAccountActivity.class);
