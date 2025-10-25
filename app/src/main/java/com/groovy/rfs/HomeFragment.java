@@ -2,18 +2,34 @@ package com.groovy.rfs;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import com.google.android.material.tabs.TabLayoutMediator;
+import com.groovy.rfs.API.MovieApiService;
 import com.groovy.rfs.Adapter.AllMoviesAdapter;
+import com.groovy.rfs.Adapter.HomeViewPagerAdapter;
+import com.groovy.rfs.databinding.ActivityMainBinding;
+import com.groovy.rfs.databinding.FragmentHomeBinding;
 import com.groovy.rfs.model.Movie;
+import com.groovy.rfs.model.SerResMovies;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -21,9 +37,8 @@ import java.util.List;
  * create an instance of this fragment.
  */
 public class HomeFragment extends Fragment {
-    private RecyclerView allMoviesRecyclerView;
-    private AllMoviesAdapter moviesAdapter;
-    private List<Movie> movieListData; // Danh sách chứa dữ liệu phim
+    private HomeViewPagerAdapter viewPagerAdapter;
+    private FragmentHomeBinding binding;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -69,60 +84,36 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_home, container, false);
+        binding = FragmentHomeBinding.inflate(inflater, container, false);
 
-        allMoviesRecyclerView = view.findViewById(R.id.all_movies_recycler_view);
+        View view = binding.getRoot();
 
-        // Khởi tạo danh sách (ban đầu rỗng)
-        movieListData = new ArrayList<>();
 
-        // Tạo Adapter với danh sách rỗng ban đầu
-        moviesAdapter = new AllMoviesAdapter(getContext(), movieListData);
-
-        // Gán Adapter cho RecyclerView
-        allMoviesRecyclerView.setAdapter(moviesAdapter);
-
-        // (Không cần set LayoutManager ở đây nếu đã đặt trong XML)
-        // GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 3);
-        // allMoviesRecyclerView.setLayoutManager(gridLayoutManager);
-
-        // Gọi hàm để tải dữ liệu phim từ API
-        fetchMoviesFromApi();
 
         return view;
     }
 
-    // Hàm ví dụ để gọi API (dùng Retrofit)
-    private void fetchMoviesFromApi() {
-        // TODO: Thay thế bằng code gọi API thật sự của bạn
-        // Ví dụ:
-        /*
-        ApiClient.getApiService().getAllMovies().enqueue(new Callback<List<Movie>>() {
-            @Override
-            public void onResponse(Call<List<Movie>> call, Response<List<Movie>> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    movieListData.clear(); // Xóa dữ liệu cũ (nếu cần)
-                    movieListData.addAll(response.body()); // Thêm dữ liệu mới
-                    moviesAdapter.notifyDataSetChanged(); // Báo Adapter cập nhật
-                } else {
-                    // Xử lý lỗi
-                }
-            }
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        // Tạo và gán Adapter cho ViewPager2
+        viewPagerAdapter = new HomeViewPagerAdapter(this); // Hoặc requireActivity()
+        binding.viewPagerHome.setAdapter(viewPagerAdapter); // Giả sử ID là viewPagerHome
 
-            @Override
-            public void onFailure(Call<List<Movie>> call, Throwable t) {
-                // Xử lý lỗi mạng
+        // Kết nối TabLayout (giả sử ID là tabLayoutHome) với ViewPager2
+        new TabLayoutMediator(binding.tabLayoutHome, binding.viewPagerHome, (tab, position) -> {
+            // Đặt tên cho các tab
+            switch (position) {
+                case 0:
+                    tab.setText("Films");
+                    break;
+                case 1:
+                    tab.setText("Reviews");
+                    break;
+                case 2:
+                    tab.setText("Lists");
+                    break;
             }
-        });
-        */
-
-        // --- Dữ liệu giả để test giao diện ---
-        movieListData.add(new Movie("Phim Ma Cà Rồng", "URL_POSTER_1"));
-        movieListData.add(new Movie("Hành Động Kịch Tính", "URL_POSTER_2"));
-        movieListData.add(new Movie("Siêu Anh Hùng Trở Lại", "URL_POSTER_3"));
-        movieListData.add(new Movie("Tình Cảm Lãng Mạn", "URL_POSTER_4"));
-        movieListData.add(new Movie("Phim Hoạt Hình Vui Nhộn", "URL_POSTER_5"));
-        moviesAdapter.notifyDataSetChanged(); // Cập nhật ngay với dữ liệu giả
-        // --- Kết thúc dữ liệu giả ---
+        }).attach();
     }
 }

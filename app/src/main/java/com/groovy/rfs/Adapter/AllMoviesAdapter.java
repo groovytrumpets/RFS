@@ -21,8 +21,17 @@ public class AllMoviesAdapter extends RecyclerView.Adapter<AllMoviesAdapter.Movi
     private Context context;
     private List<Movie> movieList;
 
-    public AllMoviesAdapter(Context context, List<Movie> movieList) {
+    private OnMovieClickListener movieClickListener; // Biến lưu trữ listener
+
+     public interface OnMovieClickListener {
+        void onMovieClick(Movie movie); // Phương thức sẽ được gọi khi item được click
+    }
+
+
+
+    public AllMoviesAdapter(Context context, OnMovieClickListener movieClickListener, List<Movie> movieList) {
         this.context = context;
+        this.movieClickListener = movieClickListener;
         this.movieList = movieList;
     }
 
@@ -44,12 +53,17 @@ public class AllMoviesAdapter extends RecyclerView.Adapter<AllMoviesAdapter.Movi
 
         // Hiển thị ảnh poster (dùng Glide)
         Glide.with(context)
-                .load(currentMovie.getPosterUrl()) // URL ảnh
+                .load(currentMovie.getPoster_url()) // URL ảnh
                 .placeholder(R.drawable.placeholder_poster) // Ảnh chờ (tạo file placeholder_poster.xml trong drawable)
                 .error(R.drawable.placeholder_poster) // Ảnh lỗi (dùng chung ảnh chờ)
                 .into(holder.posterImageView);
 
         // TODO: Thêm holder.itemView.setOnClickListener(...) nếu muốn xử lý click
+        holder.itemView.setOnClickListener(v -> {
+            if (movieClickListener != null && currentMovie != null) {
+                movieClickListener.onMovieClick(currentMovie);
+            }
+        });
     }
 
     @Override
