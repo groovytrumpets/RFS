@@ -107,6 +107,7 @@ public class AccountFragment extends Fragment {
     private void updateUIBasedOnLoginState() {
         SharedPreferences prefs = requireActivity().getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
         String fullName = prefs.getString("user_fullname", null); // Lấy tên, nếu không có thì là null
+        int email = prefs.getInt("user_id",0);
 
         Log.d("DEBUG_ACCOUNT", "2. Checking SharedPreferences. FullName found: " + fullName);
         if (fullName != null && !fullName.isEmpty()) {

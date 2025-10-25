@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -39,6 +40,7 @@ public class CreateAccountActivity extends AppCompatActivity {
     EditText email, username, password;
     Button join,signByGG;
     Context context=this;
+    ImageButton cancel_btn;
 
     GoogleSignInClient mGoogleSignInClient;
 
@@ -67,6 +69,10 @@ public class CreateAccountActivity extends AppCompatActivity {
         password = findViewById(R.id.password_create);
         join = findViewById(R.id.join_btn);
         signByGG = findViewById(R.id.signinWthGG_btn);
+        cancel_btn = findViewById(R.id.btn_cancel);
+        cancel_btn.setOnClickListener(v -> {
+            finish();
+        });
         join.setOnClickListener(view -> {
             insertUser();
         });
