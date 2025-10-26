@@ -1,6 +1,11 @@
 package com.groovy.rfs.User;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.widget.ImageButton;
+import android.widget.ListView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -8,9 +13,28 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.groovy.rfs.API.MovieApiService;
 import com.groovy.rfs.R;
+import com.groovy.rfs.authentication.AuthUtils;
+import com.groovy.rfs.authentication.LoginActivity;
+import com.groovy.rfs.model.MovieList;
+import com.groovy.rfs.model.SerResMyList;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ListUserActivity extends AppCompatActivity {
+    ListUserAdapter adapter;
+    ListView listView;
+    ImageButton btn_cancel;
+
+    List<MovieList> mvList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,5 +46,72 @@ public class ListUserActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        btn_cancel = findViewById(R.id.btn_cancel);
+        btn_cancel.setOnClickListener(v -> {
+            finish();
+        });
+        listView = findViewById(R.id.movieList_listview);
+
+        adapter = new ListUserAdapter(this, mvList); 
+        listView.setAdapter(adapter);
+
+        fetchDataFromServer();
+
+        listView.setOnItemClickListener((parent, view, position, id) -> {
+            MovieList clickedList = mvList.get(position);
+            Intent intent = new Intent(ListUserActivity.this, ListMovieActivity.class);
+            intent.putExtra("LIST_ID", clickedList.getIdMovie_collections());
+            startActivity(intent);
+        });
+
+
+    }
+
+    private void fetchDataFromServer() {
+        String token = AuthUtils.getToken(this);
+        Log.e("DEBUG_LIST_USER", "Token:"+token+", UName:"+AuthUtils.getUserName(this));
+        if (token == null) {
+            Toast.makeText(this, "Bạn chưa đăng nhập", Toast.LENGTH_SHORT).show();
+            Intent LoginIntent = new Intent(this, LoginActivity.class);
+            startActivity(LoginIntent);
+            return;
+        }
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://khanhnnhe181337.id.vn/RFS/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        MovieApiService apiService = retrofit.create(MovieApiService.class);
+
+        //call api
+        Call<SerResMyList> call = apiService.getMyLists(token);
+
+        //handle result
+        call.enqueue(new Callback<SerResMyList>() {
+            @Override
+            public void onResponse(Call<SerResMyList> call, Response<SerResMyList> response) {
+                if (response.isSuccessful()&&response.body()!=null&&response.body().getSuccess()==1){
+                    List<MovieList> fetchedList = response.body().getLists();
+
+                    if (fetchedList!=null && !fetchedList.isEmpty()){
+                        mvList.clear();
+                        mvList.addAll(fetchedList);
+                        adapter.notifyDataSetChanged();
+                    }else {
+                        Toast.makeText(ListUserActivity.this, "Bạn chưa có danh sách nào", Toast.LENGTH_SHORT).show();
+                    }
+
+                }else {
+                    Toast.makeText(ListUserActivity.this, "Không thể tải danh sách", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<SerResMyList> call, Throwable t) {
+                Toast.makeText(ListUserActivity.this, "Lỗi mạng: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
+
     }
 }

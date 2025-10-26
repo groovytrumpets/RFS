@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.groovy.rfs.User.ListUserActivity;
 import com.groovy.rfs.authentication.AuthActivity;
 import com.groovy.rfs.authentication.CreateAccountActivity;
 import com.groovy.rfs.authentication.LoginActivity;
@@ -30,7 +31,7 @@ import java.security.GeneralSecurityException;
  * create an instance of this fragment.
  */
 public class AccountFragment extends Fragment {
-    Button auth_btn,logoutBtn;
+    Button auth_btn,logoutBtn, viewListBtn;
 
     TextView username;
 
@@ -92,6 +93,12 @@ public class AccountFragment extends Fragment {
         logoutBtn.setOnClickListener(v -> {
             performLogout();
         });
+        viewListBtn = view.findViewById(R.id.myListbtn);
+        viewListBtn.setOnClickListener(v -> {
+            Intent authIntent = new Intent(getActivity(), ListUserActivity.class);
+            startActivity(authIntent);
+        });
+
 
 
         return view;
