@@ -26,6 +26,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <ListView
+        android:id="@+id/movieList_listview"
         android:layout_width="409dp"
         android:layout_height="697dp"
         android:layout_marginTop="10dp"
