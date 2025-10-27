@@ -12,11 +12,12 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.groovy.rfs.databinding.ActivityMainBinding;
-
+import androidx.core.splashscreen.SplashScreen;
 public class MainActivity extends AppCompatActivity {
     ActivityMainBinding binding;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        SplashScreen splashScreen = SplashScreen.installSplashScreen(this);
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());

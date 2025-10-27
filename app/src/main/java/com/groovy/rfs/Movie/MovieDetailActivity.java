@@ -96,9 +96,11 @@ public class MovieDetailActivity extends AppCompatActivity {
                     if (movie != null) {
                         // Hiển thị dữ liệu lên các View đã ánh xạ
                         detailTitle.setText(movie.getTitle());
-                        detailYear.setText(String.valueOf(movie.getRelease_year())); // Chuyển int thành String
+                        String detailYearText = String.valueOf(movie.getRelease_year())+" - DIRECTED BY";
+                        detailYear.setText(detailYearText); // Chuyển int thành String
                         detailDirector.setText(movie.getDirector());
-                        detailDuration.setText(movie.getDuration());
+                        String duration = movie.getDuration() + " mins";
+                        detailDuration.setText(duration);
                         detailDescription.setText(movie.getDescription());
                         detailRatingAvg.setText(String.valueOf(movie.getRatingAvg())); // Chuyển float thành String
                         detailGenres.setText(movie.getGenres());
