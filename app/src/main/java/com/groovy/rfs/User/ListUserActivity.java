@@ -14,6 +14,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.groovy.rfs.API.MovieApiService;
+import com.groovy.rfs.API.RetrofitUtils;
 import com.groovy.rfs.R;
 import com.groovy.rfs.authentication.AuthUtils;
 import com.groovy.rfs.authentication.LoginActivity;
@@ -76,10 +77,7 @@ public class ListUserActivity extends AppCompatActivity {
             startActivity(LoginIntent);
             return;
         }
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://khanhnnhe181337.id.vn/RFS/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
+        Retrofit retrofit = RetrofitUtils.retrofitBuilder();
         MovieApiService apiService = retrofit.create(MovieApiService.class);
 
         //call api

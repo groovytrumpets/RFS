@@ -3,6 +3,9 @@ package com.groovy.rfs.User;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.widget.Toolbar;
 
@@ -15,6 +18,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.groovy.rfs.API.MovieApiService;
+import com.groovy.rfs.API.RetrofitUtils;
 import com.groovy.rfs.Adapter.AllMoviesAdapter;
 import com.groovy.rfs.Movie.MovieDetailActivity;
 import com.groovy.rfs.R;
@@ -34,6 +38,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class ListMovieActivity extends AppCompatActivity implements AllMoviesAdapter.OnMovieClickListener {
     private RecyclerView allMoviesRecyclerView;
     private AllMoviesAdapter moviesAdapter;
+    private TextView list_name_tv;
+    private ImageButton btn_cancel;
     private List<Movie> movieListData = new ArrayList<>();; // Danh sách chứa dữ liệu phim
     private int listId;
     private String listName;
@@ -47,13 +53,16 @@ public class ListMovieActivity extends AppCompatActivity implements AllMoviesAda
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        list_name_tv = findViewById(R.id.list_name_tv);
+        btn_cancel = findViewById(R.id.btn_cancel);
         // 1. Nhận dữ liệu từ Intent (Trang ListUserActivity gửi qua)
         listId = getIntent().getIntExtra("LIST_ID", -1);
         listName = getIntent().getStringExtra("LIST_NAME");
         //Toast.makeText(this, "Đang mở list: " + listName, Toast.LENGTH_LONG).show();
-        // 2. Cài đặt Toolbar
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        list_name_tv.setText(listName);
+        btn_cancel.setOnClickListener(v -> {
+            finish();
+        });
         if (getSupportActionBar() != null) {
             getSupportActionBar().setTitle(listName); // Gán tiêu đề động
             getSupportActionBar().setDisplayHomeAsUpEnabled(true); // Hiển thị nút "Back"
@@ -76,10 +85,7 @@ public class ListMovieActivity extends AppCompatActivity implements AllMoviesAda
     }
 
     private void fetchMoviesInList(int listId) {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://khanhnnhe181337.id.vn/RFS/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
+        Retrofit retrofit = RetrofitUtils.retrofitBuilder();
         MovieApiService apiService = retrofit.create(MovieApiService.class);
         Call<SerResMovies> call = apiService.getMoviesInList(AuthUtils.getToken(this),listId);
 
