@@ -15,6 +15,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.RFS">
         <activity
+            android:name=".User.SearchMovieActivity"
+            android:exported="false" />
+        <activity
             android:name=".User.AddListActivity"
             android:exported="false" />
         <activity

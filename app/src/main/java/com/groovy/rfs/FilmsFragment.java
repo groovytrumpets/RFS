@@ -112,6 +112,12 @@ public class FilmsFragment extends Fragment implements AllMoviesAdapter.OnMovieC
         intent.putExtra("MOVIE_ID", movie.getIdMovie());
         startActivity(intent);
     }
+
+    @Override
+    public void onMovieLongClick(Movie movie, int position) {
+
+    }
+
     private void fetchMoviesFromApi() {
         // TODO: Thay thế bằng code gọi API thật sự của bạn
         Retrofit retrofit = RetrofitUtils.retrofitBuilder();

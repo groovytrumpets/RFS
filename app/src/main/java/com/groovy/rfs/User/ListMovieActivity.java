@@ -7,6 +7,8 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
 
 import androidx.activity.EdgeToEdge;
@@ -24,6 +26,7 @@ import com.groovy.rfs.Movie.MovieDetailActivity;
 import com.groovy.rfs.R;
 import com.groovy.rfs.authentication.AuthUtils;
 import com.groovy.rfs.model.Movie;
+import com.groovy.rfs.model.SerResBasic;
 import com.groovy.rfs.model.SerResMovies;
 
 import java.util.ArrayList;
@@ -39,7 +42,7 @@ public class ListMovieActivity extends AppCompatActivity implements AllMoviesAda
     private RecyclerView allMoviesRecyclerView;
     private AllMoviesAdapter moviesAdapter;
     private TextView list_name_tv;
-    private ImageButton btn_cancel;
+    private ImageButton btn_cancel,btn_add;
     private List<Movie> movieListData = new ArrayList<>();; // Danh sách chứa dữ liệu phim
     private int listId;
     private String listName;
@@ -55,6 +58,7 @@ public class ListMovieActivity extends AppCompatActivity implements AllMoviesAda
         });
         list_name_tv = findViewById(R.id.list_name_tv);
         btn_cancel = findViewById(R.id.btn_cancel);
+        btn_add = findViewById(R.id.btn_add_list);
         // 1. Nhận dữ liệu từ Intent (Trang ListUserActivity gửi qua)
         listId = getIntent().getIntExtra("LIST_ID", -1);
         listName = getIntent().getStringExtra("LIST_NAME");
@@ -62,6 +66,16 @@ public class ListMovieActivity extends AppCompatActivity implements AllMoviesAda
         list_name_tv.setText(listName);
         btn_cancel.setOnClickListener(v -> {
             finish();
+        });
+        btn_add.setOnClickListener(v -> {
+            // Mở trang SearchMovieActivity
+            Intent intent = new Intent(ListMovieActivity.this, SearchMovieActivity.class);
+
+            // Gửi ID của list HIỆN TẠI sang trang Search
+            // Trang Search sẽ cần ID này để biết phải thêm phim vào list nào
+            intent.putExtra("LIST_ID_TO_ADD_TO", listId);
+
+            startActivity(intent);
         });
         if (getSupportActionBar() != null) {
             getSupportActionBar().setTitle(listName); // Gán tiêu đề động
@@ -136,5 +150,50 @@ public class ListMovieActivity extends AppCompatActivity implements AllMoviesAda
         // Truyền ID phim qua Intent
         intent.putExtra("MOVIE_ID", movie.getIdMovie());
         startActivity(intent);
+    }
+
+    @Override
+    public void onMovieLongClick(Movie movie, int position) {
+        new AlertDialog.Builder(this)
+                .setTitle("Xác nhận xóa")
+                .setMessage("Bạn có chắc muốn xóa '" + movie.getTitle() + "' khỏi danh sách này?")
+                .setPositiveButton("Xóa", (dialog, which) -> {
+                    // Nếu người dùng bấm "Xóa" -> gọi API
+                    performDeleteMovie(movie, position);
+                })
+                .setNegativeButton("Hủy", null) // "Hủy" thì không làm gì cả
+                .show();
+    }
+
+    private void performDeleteMovie(Movie movie, int position) {
+        String token = AuthUtils.getToken(this);
+        if (token == null) { /* ... (xử lý lỗi token) ... */ return; }
+
+        int movieId = movie.getIdMovie();
+        // (listId đã được lấy trong onCreate)
+        Retrofit retrofit = RetrofitUtils.retrofitBuilder();
+        MovieApiService apiService = retrofit.create(MovieApiService.class);
+        Call<SerResBasic> call = apiService.deleteMovieFromList(token, listId, movieId);
+
+        call.enqueue(new Callback<SerResBasic>() {
+            @Override
+            public void onResponse(Call<SerResBasic> call, Response<SerResBasic> response) {
+                if (response.isSuccessful() && response.body().getSuccess() == 1) {
+                    Toast.makeText(ListMovieActivity.this, "Đã xóa", Toast.LENGTH_SHORT).show();
+
+                    // (QUAN TRỌNG) Xóa phim khỏi danh sách (List) và cập nhật UI
+                    movieListData.remove(position);
+                    moviesAdapter.notifyItemRemoved(position);
+                    moviesAdapter.notifyItemRangeChanged(position, movieListData.size());
+
+                } else {
+                    Toast.makeText(ListMovieActivity.this, "Xóa thất bại", Toast.LENGTH_SHORT).show();
+                }
+            }
+            @Override
+            public void onFailure(Call<SerResBasic> call, Throwable t) {
+                Toast.makeText(ListMovieActivity.this, "Lỗi mạng", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

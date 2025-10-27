@@ -1,12 +1,16 @@
 package com.groovy.rfs.API;
 
+import com.groovy.rfs.model.SerResBasic;
 import com.groovy.rfs.model.SerResMovieDetail;
 import com.groovy.rfs.model.SerResMovies;
 import com.groovy.rfs.model.SerResMyList;
 
 import retrofit2.Call;
+import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
+import retrofit2.http.POST;
 import retrofit2.http.Query;
 
 public interface MovieApiService {
@@ -28,5 +32,31 @@ public interface MovieApiService {
     @GET("search_movies.php")
     Call<SerResMovies> searchMovies( // Tái sử dụng model ResponseMovies
                                        @Query("query") String searchQuery // Gửi query lên URL (Túi 1)
+    );
+    @FormUrlEncoded // Báo cho Retrofit biết là gửi bằng Body (giống login)
+    @POST("add_list.php") // Dùng POST để tạo mới
+    Call<SerResBasic> createList(
+            @Header("Authorization") String authToken,
+            @Field("list_name") String listName,
+            @Field("description") String description
+    );
+    @FormUrlEncoded
+    @POST("add_movie_to_list.php")
+    Call<SerResBasic> addMovieToList(
+            @Header("Authorization") String token,
+            @Field("list_id") int listIdToAdd,
+            @Field("movie_id") int movieId);
+    @FormUrlEncoded
+    @POST("delete_movie_from_list.php") // Dùng POST (hoặc DELETE)
+    Call<SerResBasic> deleteMovieFromList(
+            @Header("Authorization") String authToken,
+            @Field("list_id") int listId,
+            @Field("movie_id") int movieId
+    );
+    @FormUrlEncoded
+    @POST("delete_list.php") // Dùng POST (hoặc DELETE)
+    Call<SerResBasic> deleteList(
+            @Header("Authorization") String authToken,
+            @Field("list_id") int listId
     );
 }

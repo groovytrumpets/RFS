@@ -1,27 +1,27 @@
-package com.groovy.rfs;
+package com.groovy.rfs.User;
 
-import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.groovy.rfs.API.MovieApiService;
 import com.groovy.rfs.API.RetrofitUtils;
 import com.groovy.rfs.Adapter.AllMoviesAdapter;
-import com.groovy.rfs.Movie.MovieDetailActivity;
+import com.groovy.rfs.R;
+import com.groovy.rfs.authentication.AuthUtils;
 import com.groovy.rfs.model.Movie;
+import com.groovy.rfs.model.SerResBasic;
 import com.groovy.rfs.model.SerResMovies;
 
 import java.util.ArrayList;
@@ -31,86 +31,43 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link SearchFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class SearchFragment extends Fragment implements AllMoviesAdapter.OnMovieClickListener {
+public class SearchMovieActivity extends AppCompatActivity implements AllMoviesAdapter.OnMovieClickListener{
     private SearchView searchView;
     private RecyclerView recyclerView;
-    private ProgressBar loadingSpinner;
-    private TextView tvNoResults;
-
     private AllMoviesAdapter moviesAdapter;
     private List<Movie> movieListData = new ArrayList<>();
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    public SearchFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment SearchFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static SearchFragment newInstance(String param1, String param2) {
-        SearchFragment fragment = new SearchFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
+    private int listIdToAdd;
+    private ProgressBar loadingSpinner;
+    private TextView tvNoResults;
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+        EdgeToEdge.enable(this);
+        setContentView(R.layout.activity_search_movie);
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
+        // 1. (QUAN TRỌNG) Lấy ID của List
+        listIdToAdd = getIntent().getIntExtra("LIST_ID_TO_ADD_TO", -1);
+        if (listIdToAdd == -1) {
+            Toast.makeText(this, "Lỗi: Không có ID danh sách", Toast.LENGTH_SHORT).show();
+            finish();
         }
-    }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_search, container, false);
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        // 1. Ánh xạ Views
-        searchView = view.findViewById(R.id.search_view);
-        recyclerView = view.findViewById(R.id.search_results_recyclerview);
-        loadingSpinner = view.findViewById(R.id.loading_spinner);
-        tvNoResults = view.findViewById(R.id.tv_search_result);
-
-        // 2. Cài đặt RecyclerView (Tái sử dụng AllMoviesAdapter)
-        moviesAdapter = new AllMoviesAdapter(getContext(), this, movieListData);
-        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3)); // 3 cột
+        // 2. Cài đặt (Giống SearchFragment)
+        searchView = findViewById(R.id.search_view);
+        recyclerView = findViewById(R.id.search_results_recyclerview);
+        loadingSpinner = findViewById(R.id.loading_spinner);
+        tvNoResults = findViewById(R.id.tv_search_result);
+        moviesAdapter = new AllMoviesAdapter(this, this, movieListData); // 'this' là listener
+        recyclerView.setLayoutManager(new GridLayoutManager(this, 3));
         recyclerView.setAdapter(moviesAdapter);
-
-        // 3. Cài đặt Listener cho SearchView
-        setupSearchListener();
+        setupSearchListener(); // (Code hàm này y hệt SearchFragment)
     }
-
     private void setupSearchListener() {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
 
@@ -136,17 +93,6 @@ public class SearchFragment extends Fragment implements AllMoviesAdapter.OnMovie
         });
 
     }
-    public void onMovieClick(Movie movie) {
-        Intent intent = new Intent(getActivity(), MovieDetailActivity.class);
-        intent.putExtra("MOVIE_ID", movie.getIdMovie());
-        startActivity(intent);
-    }
-
-    @Override
-    public void onMovieLongClick(Movie movie, int position) {
-
-    }
-
     private void performSearch(String query) {
         // Hiển thị loading, ẩn kết quả cũ
         loadingSpinner.setVisibility(View.VISIBLE);
@@ -182,15 +128,51 @@ public class SearchFragment extends Fragment implements AllMoviesAdapter.OnMovie
                     }
                 } else {
                     // API trả về lỗi
-                    Toast.makeText(getContext(), "Lỗi khi tìm kiếm", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SearchMovieActivity.this, "Lỗi khi tìm kiếm", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<SerResMovies> call, Throwable t) {
                 loadingSpinner.setVisibility(View.GONE);
-                Toast.makeText(getContext(), "Lỗi mạng: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(SearchMovieActivity.this, "Lỗi mạng: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    @Override
+    public void onMovieClick(Movie movie) {
+        String token = AuthUtils.getToken(this);
+        if (token == null) { /* ... (xử lý lỗi token) ... */ return; }
+
+        int movieId = movie.getIdMovie();
+
+        // (Bạn cần thêm API này vào MovieApiService.java)
+        // @POST("add_movie_to_list.php"), @Field("list_id"), @Field("movie_id")
+        Retrofit retrofit = RetrofitUtils.retrofitBuilder();
+        MovieApiService apiService = retrofit.create(MovieApiService.class);
+        Call<SerResBasic> call = apiService.addMovieToList(token, listIdToAdd, movieId);
+
+        call.enqueue(new Callback<SerResBasic>() {
+            @Override
+            public void onResponse(Call<SerResBasic> call, Response<SerResBasic> response) {
+                if (response.isSuccessful() && response.body().getSuccess() == 1) {
+                    Toast.makeText(SearchMovieActivity.this, "Đã thêm: " + movie.getTitle(), Toast.LENGTH_SHORT).show();
+                    // Bạn có thể giữ người dùng ở lại trang Search để họ thêm phim khác
+                } else {
+                    Toast.makeText(SearchMovieActivity.this, "Thêm thất bại", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<SerResBasic> call, Throwable t) {
+                Toast.makeText(SearchMovieActivity.this, "Lỗi mạng", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    @Override
+    public void onMovieLongClick(Movie movie, int position) {
+
     }
 }
