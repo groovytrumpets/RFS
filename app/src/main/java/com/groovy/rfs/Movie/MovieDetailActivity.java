@@ -1,8 +1,11 @@
 package com.groovy.rfs.Movie;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -37,6 +40,7 @@ public class MovieDetailActivity extends AppCompatActivity {
     private TextView detailRatingAvg;
     private TextView detailGenres;
 
+    private ImageButton btn_cancel;
 
     private int movieId = -1; // Biến lưu ID phim
     @Override
@@ -59,6 +63,11 @@ public class MovieDetailActivity extends AppCompatActivity {
         detailDescription = findViewById(R.id.detail_description);
         detailRatingAvg = findViewById(R.id.detail_rating_avg);
         detailGenres = findViewById(R.id.detail_genres);
+        btn_cancel = findViewById(R.id.btn_cancel);
+        btn_cancel.setOnClickListener(v -> {
+            finish();
+        });
+
 
         // Lấy ID phim từ Intent
         movieId = getIntent().getIntExtra("MOVIE_ID", -1);
@@ -89,7 +98,7 @@ public class MovieDetailActivity extends AppCompatActivity {
                     if (movie != null) {
                         // Hiển thị dữ liệu lên các View đã ánh xạ
                         detailTitle.setText(movie.getTitle());
-                        detailYear.setText(String.valueOf(movie.getReleaseYear())); // Chuyển int thành String
+                        detailYear.setText(String.valueOf(movie.getRelease_year())); // Chuyển int thành String
                         detailDirector.setText(movie.getDirector());
                         detailDuration.setText(movie.getDuration());
                         detailDescription.setText(movie.getDescription());
@@ -97,6 +106,18 @@ public class MovieDetailActivity extends AppCompatActivity {
                         detailGenres.setText(movie.getGenres());
                         detailRatingAvg.setText(String.valueOf(movie.getRatingAvg())); // Chuyển float thành String
 
+                        detailTrailerBtn.setOnClickListener(v -> {
+                            try {
+
+                            String url = movie.getTrailer_url();
+                            Intent intent = new Intent(Intent.ACTION_VIEW);
+                            intent.setData(Uri.parse(url));
+                            startActivity(intent);
+                            }catch (Exception e) {
+                                // Xử lý nếu link bị lỗi hoặc không có app ( trình duyệt, youtube)
+                                Toast.makeText(MovieDetailActivity.this, "Không thể mở trailer", Toast.LENGTH_SHORT).show();
+                            }
+                        });
 
 
                         // Dùng Glide để tải ảnh

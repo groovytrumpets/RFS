@@ -165,8 +165,8 @@ public class FilmsFragment extends Fragment implements AllMoviesAdapter.OnMovieC
         });
 
         // --- Dữ liệu giả để test giao diện ---
-        movieListData.add(new Movie("https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcTZO76u9xvtqEP3l0FC3A0GEY6d2Cg-226l0ZFaP0LsSN1_K0CoUqrm8aPp5IdOkPE1gZS8_A", "loading..."));
-        movieListData.add(new Movie("https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcTZO76u9xvtqEP3l0FC3A0GEY6d2Cg-226l0ZFaP0LsSN1_K0CoUqrm8aPp5IdOkPE1gZS8_A", "loading..."));
+        movieListData.add(new Movie("null", "loading..."));
+        movieListData.add(new Movie("null", "loading..."));
         movieListData.add(new Movie("Siêu Anh Hùng Trở Lại", "loading..."));
         moviesAdapter.notifyDataSetChanged(); // Cập nhật ngay với dữ liệu giả
         // --- Kết thúc dữ liệu giả ---

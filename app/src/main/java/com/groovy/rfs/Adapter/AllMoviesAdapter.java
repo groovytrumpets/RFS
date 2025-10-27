@@ -27,8 +27,6 @@ public class AllMoviesAdapter extends RecyclerView.Adapter<AllMoviesAdapter.Movi
         void onMovieClick(Movie movie); // Phương thức sẽ được gọi khi item được click
     }
 
-
-
     public AllMoviesAdapter(Context context, OnMovieClickListener movieClickListener, List<Movie> movieList) {
         this.context = context;
         this.movieClickListener = movieClickListener;

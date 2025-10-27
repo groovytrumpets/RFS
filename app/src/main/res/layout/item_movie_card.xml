@@ -11,7 +11,8 @@
     <ImageView
         android:id="@+id/movie_poster_image"
         android:layout_width="match_parent"
-        android:layout_height="180dp" android:scaleType="centerCrop"
+        android:layout_height="180dp"
+        android:scaleType="centerCrop"
         android:background="#444444" tools:src="@tools:sample/backgrounds/scenic" />
 
     <TextView

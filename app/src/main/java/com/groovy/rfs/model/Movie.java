@@ -3,14 +3,14 @@ package com.groovy.rfs.model;
 public class Movie {
     private int idMovie;
     private String title;
-    private int releaseYear; // Đổi từ release_year
+    private int release_year; // Đổi từ release_year
     private String duration;
     private String director;
     private String country;
     private String language;
     private String poster_url; // Đổi từ poster_url
     private String wallpaper_url; // Đổi từ wallpaper_url
-    private String trailerUrl; // Đổi từ trailer_url
+    private String trailer_url; // Đổi từ trailer_url
     private String description;
     private float ratingAvg; // Đổi từ rating_avg
     private String productionCompany; // Đổi từ production_company
@@ -102,12 +102,12 @@ public class Movie {
         this.ratingAvg = ratingAvg;
     }
 
-    public int getReleaseYear() {
-        return releaseYear;
+    public int getRelease_year() {
+        return release_year;
     }
 
-    public void setReleaseYear(int releaseYear) {
-        this.releaseYear = releaseYear;
+    public void setRelease_year(int release_year) {
+        this.release_year = release_year;
     }
 
     public String getSlug() {
@@ -118,12 +118,12 @@ public class Movie {
         this.slug = slug;
     }
 
-    public String getTrailerUrl() {
-        return trailerUrl;
+    public String getTrailer_url() {
+        return trailer_url;
     }
 
-    public void setTrailerUrl(String trailerUrl) {
-        this.trailerUrl = trailerUrl;
+    public void setTrailer_url(String trailer_url) {
+        this.trailer_url = trailer_url;
     }
 
     public String getWallpaper_url() {
@@ -134,7 +134,7 @@ public class Movie {
         this.wallpaper_url = wallpaper_url;
     }
 
-    public Movie(String ageRating, String country, String description, String director, String duration, int idMovie, String language, String poster_url, String productionCompany, float ratingAvg, int releaseYear, String slug, String title, String trailerUrl, String wallpaper_url) {
+    public Movie(String ageRating, String country, String description, String director, String duration, int idMovie, String language, String poster_url, String productionCompany, float ratingAvg, int release_year, String slug, String title, String trailer_url, String wallpaper_url) {
         this.ageRating = ageRating;
         this.country = country;
         this.description = description;
@@ -145,10 +145,10 @@ public class Movie {
         this.poster_url = poster_url;
         this.productionCompany = productionCompany;
         this.ratingAvg = ratingAvg;
-        this.releaseYear = releaseYear;
+        this.release_year = release_year;
         this.slug = slug;
         this.title = title;
-        this.trailerUrl = trailerUrl;
+        this.trailer_url = trailer_url;
         this.wallpaper_url = wallpaper_url;
     }
 

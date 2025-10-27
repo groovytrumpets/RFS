@@ -25,4 +25,8 @@ public interface MovieApiService {
                                           @Header("Authorization") String authToken,
                                           @Query("list_id") int listId // "Túi 1": Gửi ID của list lên URL
     );
+    @GET("search_movies.php")
+    Call<SerResMovies> searchMovies( // Tái sử dụng model ResponseMovies
+                                       @Query("query") String searchQuery // Gửi query lên URL (Túi 1)
+    );
 }
