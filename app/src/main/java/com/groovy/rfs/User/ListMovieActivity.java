@@ -14,16 +14,27 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.groovy.rfs.API.MovieApiService;
 import com.groovy.rfs.Adapter.AllMoviesAdapter;
 import com.groovy.rfs.Movie.MovieDetailActivity;
 import com.groovy.rfs.R;
+import com.groovy.rfs.authentication.AuthUtils;
 import com.groovy.rfs.model.Movie;
+import com.groovy.rfs.model.SerResMovies;
+
+import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ListMovieActivity extends AppCompatActivity implements AllMoviesAdapter.OnMovieClickListener {
     private RecyclerView allMoviesRecyclerView;
     private AllMoviesAdapter moviesAdapter;
-    private List<Movie> movieListData; // Danh sách chứa dữ liệu phim
+    private List<Movie> movieListData = new ArrayList<>();; // Danh sách chứa dữ liệu phim
     private int listId;
     private String listName;
     @Override
@@ -39,7 +50,7 @@ public class ListMovieActivity extends AppCompatActivity implements AllMoviesAda
         // 1. Nhận dữ liệu từ Intent (Trang ListUserActivity gửi qua)
         listId = getIntent().getIntExtra("LIST_ID", -1);
         listName = getIntent().getStringExtra("LIST_NAME");
-
+        //Toast.makeText(this, "Đang mở list: " + listName, Toast.LENGTH_LONG).show();
         // 2. Cài đặt Toolbar
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -59,9 +70,57 @@ public class ListMovieActivity extends AppCompatActivity implements AllMoviesAda
             Toast.makeText(this, "Lỗi: Không tìm thấy ID danh sách", Toast.LENGTH_SHORT).show();
             finish(); // Đóng Activity nếu không có ID
         } else {
-//            fetchMoviesInList(listId);
+            fetchMoviesInList(listId);
         }
 
+    }
+
+    private void fetchMoviesInList(int listId) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://khanhnnhe181337.id.vn/RFS/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        MovieApiService apiService = retrofit.create(MovieApiService.class);
+        Call<SerResMovies> call = apiService.getMoviesInList(AuthUtils.getToken(this),listId);
+
+        call.enqueue(new Callback<SerResMovies>() {
+            @Override
+            public void onResponse(Call<SerResMovies> call, Response<SerResMovies> response) {
+                if (response.isSuccessful()&&response.body()!=null){
+                    SerResMovies serverResponse = response.body();
+                    if (serverResponse.getSuccess() == 1) {
+                        List<Movie> fetchedMovies = serverResponse.getMovies();
+                        if (fetchedMovies != null && !fetchedMovies.isEmpty()) {
+                            Log.d("API_FETCH", "Đã nhận được " + fetchedMovies.size() + " phim.");
+                            Log.d("API_FETCH", "URL:  " + fetchedMovies.get(0).getPoster_url() + ".");
+
+                            // ✅ CẬP NHẬT DỮ LIỆU VÀO ADAPTER
+                            movieListData.clear(); // Xóa dữ liệu cũ
+                            movieListData.addAll(fetchedMovies); // Thêm dữ liệu mới
+                            moviesAdapter.notifyDataSetChanged(); // Báo RecyclerView vẽ lại
+                        } else {
+                            Log.d("API_FETCH", "Danh sách phim rỗng hoặc null.");
+                            Toast.makeText(ListMovieActivity.this, "Không có phim nào.", Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        // API báo lỗi logic (success = 0)
+                        String message = serverResponse.getMessage() != null ? serverResponse.getMessage() : "Lỗi không xác định từ server.";
+                        Log.e("API_FETCH", "API báo lỗi: " + message);
+                        Toast.makeText(ListMovieActivity.this, message, Toast.LENGTH_SHORT).show();
+                    }
+                }else {
+                    // Lỗi HTTP (404, 500...) hoặc response body rỗng
+                    Log.e("API_FETCH", "Lỗi HTTP hoặc response rỗng. Code: " + response.code());
+                    Toast.makeText(ListMovieActivity.this, "Lỗi tải dữ liệu phim (Code: " + response.code() + ")", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<SerResMovies> call, Throwable t) {
+                Log.e("API_FETCH", "Lỗi kết nối mạng: " + t.getMessage(), t);
+                Toast.makeText(ListMovieActivity.this, "Lỗi mạng: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override
