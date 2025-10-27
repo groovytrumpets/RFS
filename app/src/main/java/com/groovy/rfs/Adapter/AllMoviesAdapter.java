@@ -25,6 +25,8 @@ public class AllMoviesAdapter extends RecyclerView.Adapter<AllMoviesAdapter.Movi
 
      public interface OnMovieClickListener {
         void onMovieClick(Movie movie); // Phương thức sẽ được gọi khi item được click
+
+         void onMovieLongClick(Movie movie, int position); // Click giữ (để xóa)
     }
 
     public AllMoviesAdapter(Context context, OnMovieClickListener movieClickListener, List<Movie> movieList) {
@@ -61,6 +63,13 @@ public class AllMoviesAdapter extends RecyclerView.Adapter<AllMoviesAdapter.Movi
             if (movieClickListener != null && currentMovie != null) {
                 movieClickListener.onMovieClick(currentMovie);
             }
+        });
+        holder.itemView.setOnLongClickListener(v -> {
+            if (movieClickListener != null && currentMovie != null) {
+                // "position" là vị trí của item trong RecyclerView
+                movieClickListener.onMovieLongClick(currentMovie, holder.getAdapterPosition());
+            }
+            return true; // true = báo là "đã xử lý" click giữ
         });
     }
 
