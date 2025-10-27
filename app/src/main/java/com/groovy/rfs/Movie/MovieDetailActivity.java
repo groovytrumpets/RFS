@@ -18,6 +18,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.bumptech.glide.Glide;
 import com.groovy.rfs.API.MovieApiService;
+import com.groovy.rfs.API.RetrofitUtils;
 import com.groovy.rfs.R;
 import com.groovy.rfs.model.Movie;
 import com.groovy.rfs.model.SerResMovieDetail;
@@ -82,10 +83,7 @@ public class MovieDetailActivity extends AppCompatActivity {
     }
 
     private void fetchMovieDetails() {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://khanhnnhe181337.id.vn/RFS/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
+        Retrofit retrofit = RetrofitUtils.retrofitBuilder();
         MovieApiService apiService = retrofit.create(MovieApiService.class);
         Log.d("DETAIL_DEBUG", "Calling fetchMovieDetails for ID: " + movieId);
         Call<SerResMovieDetail> call = apiService.getMovieDetails(movieId);

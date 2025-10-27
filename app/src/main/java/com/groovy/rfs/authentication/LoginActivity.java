@@ -25,6 +25,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
+import com.groovy.rfs.API.RetrofitUtils;
 import com.groovy.rfs.API.UserApiService;
 import com.groovy.rfs.MainActivity;
 import com.groovy.rfs.R;
@@ -141,10 +142,7 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
     private void sendTokenToServer(String idToken) {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://khanhnnhe181337.id.vn/RFS/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
+        Retrofit retrofit = RetrofitUtils.retrofitBuilder();
 
         UserApiService apiService = retrofit.create(UserApiService.class);
         Call<SevResUser> call = apiService.loginWithGoogle(idToken);
@@ -198,10 +196,7 @@ public class LoginActivity extends AppCompatActivity {
 
 
     private void loginUser(String identifier, String password) {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://khanhnnhe181337.id.vn/RFS/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
+        Retrofit retrofit = RetrofitUtils.retrofitBuilder();
 
         UserApiService apiService = retrofit.create(UserApiService.class);
         Call<SevResUser> call = apiService.loginUser(identifier, password);

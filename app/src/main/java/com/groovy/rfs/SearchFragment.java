@@ -18,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.groovy.rfs.API.MovieApiService;
+import com.groovy.rfs.API.RetrofitUtils;
 import com.groovy.rfs.Adapter.AllMoviesAdapter;
 import com.groovy.rfs.Movie.MovieDetailActivity;
 import com.groovy.rfs.model.Movie;
@@ -145,10 +146,7 @@ public class SearchFragment extends Fragment implements AllMoviesAdapter.OnMovie
         loadingSpinner.setVisibility(View.VISIBLE);
         recyclerView.setVisibility(View.GONE);
         tvNoResults.setVisibility(View.GONE);
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://khanhnnhe181337.id.vn/RFS/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
+        Retrofit retrofit = RetrofitUtils.retrofitBuilder();
         // Lấy ApiService
         MovieApiService apiService = retrofit.create(MovieApiService.class);
 

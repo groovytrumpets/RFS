@@ -12,7 +12,7 @@
         android:id="@+id/titleTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="20dp"
         android:text="Review Film System"
         android:textColor="@color/white"
         android:textSize="20sp"
@@ -35,6 +35,7 @@
         app:layout_constraintEnd_toEndOf="parent" />
 
     <androidx.viewpager2.widget.ViewPager2
+        android:layout_marginTop="10dp"
         android:id="@+id/view_pager_home"
         android:layout_width="0dp"
         android:layout_height="0dp"

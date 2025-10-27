@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.groovy.rfs.API.MovieApiService;
+import com.groovy.rfs.API.RetrofitUtils;
 import com.groovy.rfs.Adapter.AllMoviesAdapter;
 import com.groovy.rfs.Movie.MovieDetailActivity;
 import com.groovy.rfs.model.Movie;
@@ -113,10 +114,7 @@ public class FilmsFragment extends Fragment implements AllMoviesAdapter.OnMovieC
     }
     private void fetchMoviesFromApi() {
         // TODO: Thay thế bằng code gọi API thật sự của bạn
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://khanhnnhe181337.id.vn/RFS/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
+        Retrofit retrofit = RetrofitUtils.retrofitBuilder();
         MovieApiService apiService = retrofit.create(MovieApiService.class);
         Call<SerResMovies> call = apiService.getAllMovies();
 

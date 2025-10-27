@@ -24,6 +24,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
+import com.groovy.rfs.API.RetrofitUtils;
 import com.groovy.rfs.API.UserApiService;
 import com.groovy.rfs.MainActivity;
 import com.groovy.rfs.R;
@@ -100,10 +101,7 @@ public class CreateAccountActivity extends AppCompatActivity {
         user.setUsername(username.getText().toString());
         user.setPassword(password.getText().toString());
         //3. create entity in Retrofit
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://khanhnnhe181337.id.vn/RFS/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
+        Retrofit retrofit = RetrofitUtils.retrofitBuilder();
         //4. call funct from interface
         //4.0 create entity from interface
         UserApiService userApiService = retrofit.create(UserApiService.class);
@@ -159,10 +157,7 @@ public class CreateAccountActivity extends AppCompatActivity {
 
     // Hàm mới để gọi API
     private void sendTokenToServer(String idToken) {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://khanhnnhe181337.id.vn/RFS/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
+        Retrofit retrofit = RetrofitUtils.retrofitBuilder();
 
         UserApiService apiService = retrofit.create(UserApiService.class);
         Call<SevResUser> call = apiService.loginWithGoogle(idToken);
