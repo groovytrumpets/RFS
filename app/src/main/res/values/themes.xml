@@ -1,11 +1,17 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Base.Theme.RFS" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <item name="colorPrimary">#7EBDC2</item> <item name="colorOnPrimary">#252627</item>
-
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="colorPrimary">#7EBDC2</item>
+        <item name="colorOnPrimary">#252627</item>
     </style>
 
     <style name="Theme.RFS" parent="Base.Theme.RFS" />
+
+    <style name="Theme.App.Starting" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/splash_background</item>
+
+        <item name="windowSplashScreenAnimatedIcon">@drawable/logo</item>
+
+        <item name="postSplashScreenTheme">@style/Base.Theme.RFS</item>
+    </style>
 </resources>
