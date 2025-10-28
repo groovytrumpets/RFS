@@ -1,5 +1,6 @@
 package com.groovy.rfs.User;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -93,7 +94,10 @@ public class AddListActivity extends AppCompatActivity {
 
                     // (Quan trọng) Báo cho ListUserActivity biết là dữ liệu đã đổi
                     setResult(RESULT_OK); // Đặt cờ kết quả
-                    finish(); // Đóng Activity
+
+                    Intent intent = new Intent(AddListActivity.this, ListUserActivity.class);
+                    startActivity(intent);
+                    finish();
 
                 } else {
                     String message = (response.body() != null) ? response.body().getMessage() : "API ERROR";

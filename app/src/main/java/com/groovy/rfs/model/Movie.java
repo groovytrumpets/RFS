@@ -12,14 +12,23 @@ public class Movie {
     private String wallpaper_url; // Đổi từ wallpaper_url
     private String trailer_url; // Đổi từ trailer_url
     private String description;
-    private float ratingAvg; // Đổi từ rating_avg
+    private float rating_avg; // Đổi từ rating_avg
     private String productionCompany; // Đổi từ production_company
     private String ageRating; // Đổi từ age_rating
     private String slug;
 
     private String genres;
+    private String visibility;
 
     public Movie() {
+    }
+
+    public String getVisibility() {
+        return visibility;
+    }
+
+    public void setVisibility(String visibility) {
+        this.visibility = visibility;
     }
 
     public String getGenres() {
@@ -94,12 +103,12 @@ public class Movie {
         this.productionCompany = productionCompany;
     }
 
-    public float getRatingAvg() {
-        return ratingAvg;
+    public float getRating_avg() {
+        return rating_avg;
     }
 
-    public void setRatingAvg(float ratingAvg) {
-        this.ratingAvg = ratingAvg;
+    public void setRating_avg(float rating_avg) {
+        this.rating_avg = rating_avg;
     }
 
     public int getRelease_year() {
@@ -134,7 +143,7 @@ public class Movie {
         this.wallpaper_url = wallpaper_url;
     }
 
-    public Movie(String ageRating, String country, String description, String director, String duration, int idMovie, String language, String poster_url, String productionCompany, float ratingAvg, int release_year, String slug, String title, String trailer_url, String wallpaper_url) {
+    public Movie(String ageRating, String country, String description, String director, String duration, int idMovie, String language, String poster_url, String productionCompany, float rating_avg, int release_year, String slug, String title, String trailer_url, String wallpaper_url) {
         this.ageRating = ageRating;
         this.country = country;
         this.description = description;
@@ -144,7 +153,7 @@ public class Movie {
         this.language = language;
         this.poster_url = poster_url;
         this.productionCompany = productionCompany;
-        this.ratingAvg = ratingAvg;
+        this.rating_avg = rating_avg;
         this.release_year = release_year;
         this.slug = slug;
         this.title = title;

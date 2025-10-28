@@ -84,8 +84,9 @@
         android:hint="Add list name..."
         android:inputType="text"
         android:text=""
-        android:textColorHint="@color/white"
         android:textStyle="bold"
+        android:textColor="#BDBDBD"
+        android:textColorHint="#BDBDBD"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView2" />
@@ -99,8 +100,9 @@
         android:ems="10"
         android:hint="Add description..."
         android:inputType="text"
+        android:textColor="#BDBDBD"
+        android:textColorHint="#BDBDBD"
         android:text=""
-        android:textColorHint="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editListName" />

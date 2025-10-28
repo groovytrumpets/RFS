@@ -42,10 +42,11 @@ public class ListMovieActivity extends AppCompatActivity implements AllMoviesAda
     private RecyclerView allMoviesRecyclerView;
     private AllMoviesAdapter moviesAdapter;
     private TextView list_name_tv;
-    private ImageButton btn_cancel,btn_add;
+    private ImageButton btn_cancel,btn_add,btn_edit;
     private List<Movie> movieListData = new ArrayList<>();; // Danh sách chứa dữ liệu phim
     private int listId;
     private String listName;
+    private String currentVisibility = "private";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,6 +60,7 @@ public class ListMovieActivity extends AppCompatActivity implements AllMoviesAda
         list_name_tv = findViewById(R.id.list_name_tv);
         btn_cancel = findViewById(R.id.btn_cancel);
         btn_add = findViewById(R.id.btn_add_list);
+        btn_edit = findViewById(R.id.btn_edit_list);
         // 1. Nhận dữ liệu từ Intent (Trang ListUserActivity gửi qua)
         listId = getIntent().getIntExtra("LIST_ID", -1);
         listName = getIntent().getStringExtra("LIST_NAME");
@@ -66,6 +68,9 @@ public class ListMovieActivity extends AppCompatActivity implements AllMoviesAda
         list_name_tv.setText(listName);
         btn_cancel.setOnClickListener(v -> {
             finish();
+        });
+        btn_edit.setOnClickListener(v -> {
+            showVisibilityDialog();
         });
         btn_add.setOnClickListener(v -> {
             // Mở trang SearchMovieActivity
@@ -76,6 +81,7 @@ public class ListMovieActivity extends AppCompatActivity implements AllMoviesAda
             intent.putExtra("LIST_ID_TO_ADD_TO", listId);
 
             startActivity(intent);
+            finish();
         });
         if (getSupportActionBar() != null) {
             getSupportActionBar().setTitle(listName); // Gán tiêu đề động
@@ -98,6 +104,62 @@ public class ListMovieActivity extends AppCompatActivity implements AllMoviesAda
 
     }
 
+    private void showVisibilityDialog() {
+        final String[] items = {"public", "private","friends"}; // Các lựa chọn
+        // (Nếu bạn lưu currentVisibility, bạn có thể set checked item mặc định)
+        // int checkedItem = (currentVisibility != null && currentVisibility.equals("private")) ? 1 : 0;
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Chọn quyền truy cập");
+        builder.setSingleChoiceItems(items, -1, (dialog, which) -> {
+            String selectedVisibilityValue;
+            if (which == 0) {
+                selectedVisibilityValue = "public"; // Giá trị gửi lên API
+            } else if (which == 1){
+                selectedVisibilityValue = "private"; // Giá trị gửi lên API
+            }else {
+                selectedVisibilityValue = "friends"; // Giá trị gửi lên API
+            }
+
+            // Gọi API để cập nhật
+            updateVisibility(selectedVisibilityValue);
+
+            dialog.dismiss(); // Đóng dialog sau khi chọn
+        });
+        builder.setNegativeButton("Hủy", null);
+        builder.show();
+
+    }
+
+    private void updateVisibility(String newVisibility) {
+        String token = AuthUtils.getToken(this);
+        if (token == null) { /* ... (xử lý lỗi token) ... */ return; }
+        Retrofit retrofit = RetrofitUtils.retrofitBuilder();
+        MovieApiService apiService = retrofit.create(MovieApiService.class);
+        Call<SerResBasic> call = apiService.updateListVisibility(token, listId, newVisibility);
+
+        Toast.makeText(this, "Đang cập nhật...", Toast.LENGTH_SHORT).show();
+
+        call.enqueue(new Callback<SerResBasic>() {
+            @Override
+            public void onResponse(Call<SerResBasic> call, Response<SerResBasic> response) {
+                if (response.isSuccessful() && response.body().getSuccess() == 1) {
+                    Toast.makeText(ListMovieActivity.this, "Đã cập nhật quyền truy cập", Toast.LENGTH_SHORT).show();
+                    currentVisibility = newVisibility;
+                    updateVisibilityIcon();
+                    // (Optional) Cập nhật biến currentVisibility nếu cần
+                    // currentVisibility = newVisibility;
+                } else {
+                    Toast.makeText(ListMovieActivity.this, "Cập nhật thất bại", Toast.LENGTH_SHORT).show();
+                }
+            }
+            @Override
+            public void onFailure(Call<SerResBasic> call, Throwable t) {
+                Toast.makeText(ListMovieActivity.this, "Lỗi mạng", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
     private void fetchMoviesInList(int listId) {
         Retrofit retrofit = RetrofitUtils.retrofitBuilder();
         MovieApiService apiService = retrofit.create(MovieApiService.class);
@@ -109,6 +171,9 @@ public class ListMovieActivity extends AppCompatActivity implements AllMoviesAda
                 if (response.isSuccessful()&&response.body()!=null){
                     SerResMovies serverResponse = response.body();
                     if (serverResponse.getSuccess() == 1) {
+                        currentVisibility = serverResponse.getMovies().get(0).getVisibility();
+                        updateVisibilityIcon();
+
                         List<Movie> fetchedMovies = serverResponse.getMovies();
                         if (fetchedMovies != null && !fetchedMovies.isEmpty()) {
                             Log.d("API_FETCH", "Đã nhận được " + fetchedMovies.size() + " phim.");
@@ -141,6 +206,16 @@ public class ListMovieActivity extends AppCompatActivity implements AllMoviesAda
                 Toast.makeText(ListMovieActivity.this, "Lỗi mạng: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void updateVisibilityIcon() {
+        if ("private".equalsIgnoreCase(currentVisibility)) {
+            btn_edit.setImageResource(R.drawable.outline_lock_24); // Đặt icon khóa
+        } else if ("public".equalsIgnoreCase(currentVisibility)){
+            btn_edit.setImageResource(R.drawable.outline_public_24); // Đặt icon công khai
+        }else {
+            btn_edit.setImageResource(R.drawable.outline_friends); // Đặt icon công khai
+        }
     }
 
     @Override

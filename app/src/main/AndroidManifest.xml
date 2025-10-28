@@ -15,6 +15,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.RFS">
         <activity
+            android:name=".Public.ListMoviePublicActivity"
+            android:exported="false" />
+        <activity
             android:name=".User.SearchMovieActivity"
             android:exported="false" />
         <activity
@@ -42,8 +45,8 @@
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:theme="@style/Theme.App.Starting"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.App.Starting">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

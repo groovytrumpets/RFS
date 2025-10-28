@@ -60,6 +60,7 @@ public class ListUserActivity extends AppCompatActivity {
         btn_add_list.setOnClickListener(v -> {
             Intent intent = new Intent(this, AddListActivity.class);
             startActivity(intent);
+            finish();
         });
         listView = findViewById(R.id.movieList_listview);
 
