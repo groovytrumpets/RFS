@@ -29,7 +29,7 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/movies_in_list_recyclerview"
         android:layout_width="411dp"
-        android:layout_height="667dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:padding="8dp"
         app:layout_constraintEnd_toEndOf="parent"

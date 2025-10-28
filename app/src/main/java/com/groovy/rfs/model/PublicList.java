@@ -1,11 +1,22 @@
 package com.groovy.rfs.model;
 
+import java.util.List;
+
 public class PublicList {
     private int idMovie_collections;
     private String list_name;
 
     private String description;
     private String creator_name;
+    private List<MoviePreview> movies_preview;
+
+    public List<MoviePreview> getMovies_preview() {
+        return movies_preview;
+    }
+
+    public void setMovies_preview(List<MoviePreview> movies_preview) {
+        this.movies_preview = movies_preview;
+    }
 
     public String getCreator_name() {
         return creator_name;

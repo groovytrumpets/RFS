@@ -14,4 +14,26 @@
 
         <item name="postSplashScreenTheme">@style/Base.Theme.RFS</item>
     </style>
+    <style name="CustomBottomNavigation" parent="Widget.MaterialComponents.BottomNavigationView">
+        <item name="itemIconSize">20dp</item>
+        <item name="itemPaddingTop">0dp</item>
+        <item name="itemPaddingBottom">0dp</item>
+    </style>
+    <style name="AccountItemButton">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">38dp</item>
+        <item name="android:textColor">@color/ic_logo_app_background</item>
+        <item name="android:textAlignment">textStart</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:background">#333333</item>
+        <item name="android:paddingStart">16dp</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="DividerLine">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1dp</item>
+        <item name="android:background">#40FFFFFF</item> <!-- trắng mờ -->
+    </style>
+
 </resources>
