@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.groovy.rfs.R;
@@ -42,6 +43,10 @@ public class PublicListAdapter extends RecyclerView.Adapter<PublicListAdapter.Vi
         holder.tvCreatorName.setText("by " + currentList.getCreator_name());
         holder.tvDescription.setText(currentList.getDescription());
 
+        LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
+        holder.rvMoviesPreview.setLayoutManager(layoutManager);
+        MoviePreviewAdapter previewAdapter = new MoviePreviewAdapter(context, currentList.getMovies_preview());
+        holder.rvMoviesPreview.setAdapter(previewAdapter);
         holder.itemView.setOnClickListener(v -> {
             if (listener != null) {
                 listener.onListClick(currentList);
@@ -56,11 +61,13 @@ public class PublicListAdapter extends RecyclerView.Adapter<PublicListAdapter.Vi
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView tvListName, tvCreatorName, tvDescription;
+        RecyclerView rvMoviesPreview; // Tham chiếu đến RecyclerView ngang
         ViewHolder(@NonNull View itemView) {
             super(itemView);
             tvListName = itemView.findViewById(R.id.tv_public_list_name);
             tvCreatorName = itemView.findViewById(R.id.tv_creator_name);
             tvDescription = itemView.findViewById(R.id.tv_public_list_description);
+            rvMoviesPreview = itemView.findViewById(R.id.rv_movies_preview);
         }
     }
 }

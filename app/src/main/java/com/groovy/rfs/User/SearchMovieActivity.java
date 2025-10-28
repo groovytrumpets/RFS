@@ -177,9 +177,21 @@ public class SearchMovieActivity extends AppCompatActivity implements AllMoviesA
                 if (response.isSuccessful() && response.body().getSuccess() == 1) {
                     Toast.makeText(SearchMovieActivity.this, "Đã thêm: " + movie.getTitle(), Toast.LENGTH_SHORT).show();
 
+                    // THÊM THÀNH CÔNG (success == 1)
                     // Bạn có thể giữ người dùng ở lại trang Search để họ thêm phim khác
                 } else {
-                    Toast.makeText(SearchMovieActivity.this, "Thêm thất bại", Toast.LENGTH_SHORT).show();
+                    SerResBasic res = response.body();
+                    // THÊM THẤT BẠI (success == 0)
+                    String message =res.getMessage() ;
+
+                    // --- KIỂM TRA MESSAGE Ở ĐÂY ---
+                    if ("already_exists".equals(message)) {
+                        // LỖI DO ĐÃ TỒN TẠI
+                        Toast.makeText(SearchMovieActivity.this, "Phim này đã có trong danh sách", Toast.LENGTH_SHORT).show();
+                    } else {
+                        // LỖI KHÁC (ví dụ: lỗi CSDL, sai token...)
+                        Toast.makeText(SearchMovieActivity.this, "Thêm thất bại: " + message, Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
 

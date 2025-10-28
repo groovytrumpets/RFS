@@ -171,11 +171,11 @@ public class ListMovieActivity extends AppCompatActivity implements AllMoviesAda
                 if (response.isSuccessful()&&response.body()!=null){
                     SerResMovies serverResponse = response.body();
                     if (serverResponse.getSuccess() == 1) {
-                        currentVisibility = serverResponse.getMovies().get(0).getVisibility();
-                        updateVisibilityIcon();
 
                         List<Movie> fetchedMovies = serverResponse.getMovies();
                         if (fetchedMovies != null && !fetchedMovies.isEmpty()) {
+                        currentVisibility = serverResponse.getMovies().get(0).getVisibility();
+                        updateVisibilityIcon();
                             Log.d("API_FETCH", "Đã nhận được " + fetchedMovies.size() + " phim.");
                             Log.d("API_FETCH", "URL:  " + fetchedMovies.get(0).getPoster_url() + ".");
 

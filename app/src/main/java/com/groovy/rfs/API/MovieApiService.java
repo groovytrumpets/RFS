@@ -37,6 +37,7 @@ public interface MovieApiService {
     @GET("search_movies.php")
     Call<SerResMovies> searchMovies( // Tái sử dụng model ResponseMovies
                                        @Query("query") String searchQuery // Gửi query lên URL (Túi 1)
+
     );
     @FormUrlEncoded // Báo cho Retrofit biết là gửi bằng Body (giống login)
     @POST("add_list.php") // Dùng POST để tạo mới
