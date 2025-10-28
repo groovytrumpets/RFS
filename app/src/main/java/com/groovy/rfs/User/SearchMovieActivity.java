@@ -1,7 +1,9 @@
 package com.groovy.rfs.User;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.TextView;
@@ -34,6 +36,7 @@ import retrofit2.Retrofit;
 
 public class SearchMovieActivity extends AppCompatActivity implements AllMoviesAdapter.OnMovieClickListener{
     private SearchView searchView;
+    private ImageButton btnCancel, btnSave;
     private RecyclerView recyclerView;
     private AllMoviesAdapter moviesAdapter;
     private List<Movie> movieListData = new ArrayList<>();
@@ -63,9 +66,24 @@ public class SearchMovieActivity extends AppCompatActivity implements AllMoviesA
         recyclerView = findViewById(R.id.search_results_recyclerview);
         loadingSpinner = findViewById(R.id.loading_spinner);
         tvNoResults = findViewById(R.id.tv_search_result);
+        btnCancel = findViewById(R.id.btn_cancel);
+        btnSave = findViewById(R.id.btn_save);
         moviesAdapter = new AllMoviesAdapter(this, this, movieListData); // 'this' là listener
         recyclerView.setLayoutManager(new GridLayoutManager(this, 3));
         recyclerView.setAdapter(moviesAdapter);
+        btnCancel.setOnClickListener(v -> {
+            Intent intent = new Intent(this, ListMovieActivity.class);
+            intent.putExtra("LIST_ID", listIdToAdd);
+            startActivity(intent);
+            finish();
+        });
+        btnSave.setOnClickListener(v -> {
+            Intent intent = new Intent(this, ListMovieActivity.class);
+            intent.putExtra("LIST_ID", listIdToAdd);
+            startActivity(intent);
+            finish();
+
+        });
         setupSearchListener(); // (Code hàm này y hệt SearchFragment)
     }
     private void setupSearchListener() {
@@ -158,6 +176,7 @@ public class SearchMovieActivity extends AppCompatActivity implements AllMoviesA
             public void onResponse(Call<SerResBasic> call, Response<SerResBasic> response) {
                 if (response.isSuccessful() && response.body().getSuccess() == 1) {
                     Toast.makeText(SearchMovieActivity.this, "Đã thêm: " + movie.getTitle(), Toast.LENGTH_SHORT).show();
+
                     // Bạn có thể giữ người dùng ở lại trang Search để họ thêm phim khác
                 } else {
                     Toast.makeText(SearchMovieActivity.this, "Thêm thất bại", Toast.LENGTH_SHORT).show();

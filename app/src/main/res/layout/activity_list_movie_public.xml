@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#252627"
-    tools:context=".User.ListMovieActivity">
+    tools:context=".Public.ListMoviePublicActivity">
 
 
     <TextView
@@ -47,26 +47,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:tint="@color/white" />
 
-    <ImageButton
-        android:id="@+id/btn_add_list"
-        android:layout_width="38dp"
-        android:layout_height="38dp"
-        android:layout_marginEnd="1dp"
-        android:background="@android:color/transparent"
-        android:backgroundTint="#252627"
-        android:src="@drawable/outline_add_2_24"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:tint="@color/white" />
 
-    <ImageButton
-        android:id="@+id/btn_edit_list"
-        android:layout_width="38dp"
-        android:layout_height="38dp"
-        android:background="@android:color/transparent"
-        android:backgroundTint="#252627"
 
-        app:layout_constraintEnd_toStartOf="@+id/btn_add_list"
-        app:layout_constraintTop_toTopOf="parent"
-        app:tint="@color/white" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

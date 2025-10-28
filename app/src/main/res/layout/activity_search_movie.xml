@@ -8,6 +8,45 @@
     android:background="#252627"
     tools:context=".User.SearchMovieActivity">
 
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="126dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="184dp"
+        android:text="Add Movie"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.205"
+        app:layout_constraintStart_toEndOf="@+id/btn_cancel"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageButton
+        android:id="@+id/btn_cancel"
+        android:background="@android:color/transparent"
+        android:backgroundTint="#252627"
+        android:layout_width="38dp"
+        android:layout_height="38dp"
+        android:src="@drawable/outline_arrow_back_ios_new_24"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="@color/white" />
+
+    <ImageButton
+        android:id="@+id/btn_save"
+        android:layout_width="38dp"
+        android:layout_height="38dp"
+        android:layout_marginEnd="1dp"
+        android:background="@android:color/transparent"
+        android:backgroundTint="#252627"
+        android:src="@drawable/outline_check_24"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="@color/white" />
     <SearchView
         android:id="@+id/search_view"
         android:layout_width="0dp"

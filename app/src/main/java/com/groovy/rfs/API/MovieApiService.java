@@ -4,6 +4,7 @@ import com.groovy.rfs.model.SerResBasic;
 import com.groovy.rfs.model.SerResMovieDetail;
 import com.groovy.rfs.model.SerResMovies;
 import com.groovy.rfs.model.SerResMyList;
+import com.groovy.rfs.model.SerResPubLists;
 
 import retrofit2.Call;
 import retrofit2.http.Field;
@@ -28,6 +29,10 @@ public interface MovieApiService {
     Call<SerResMovies> getMoviesInList( // Tái sử dụng model ResponseMovies
                                           @Header("Authorization") String authToken,
                                           @Query("list_id") int listId // "Túi 1": Gửi ID của list lên URL
+    );
+    @GET("get_movies_in_public_list.php") // Tên file PHP mới
+    Call<SerResMovies> getMoviesInListPublic( // Tái sử dụng model ResponseMovies
+                                        @Query("list_id") int listId // "Túi 1": Gửi ID của list lên URL
     );
     @GET("search_movies.php")
     Call<SerResMovies> searchMovies( // Tái sử dụng model ResponseMovies
@@ -59,4 +64,13 @@ public interface MovieApiService {
             @Header("Authorization") String authToken,
             @Field("list_id") int listId
     );
+    @FormUrlEncoded
+    @POST("update_list_visibility.php")
+    Call<SerResBasic> updateListVisibility(
+            @Header("Authorization") String authToken,
+            @Field("list_id") int listId,
+            @Field("new_visibility") String newVisibility // "public" hoặc "private"
+    );
+    @GET("get_all_public_lists.php") // Tên file PHP
+    Call<SerResPubLists> getPublicListsSimple();
 }

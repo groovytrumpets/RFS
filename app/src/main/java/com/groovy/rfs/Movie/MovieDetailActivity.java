@@ -27,7 +27,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MovieDetailActivity extends AppCompatActivity {
     private ImageView detailWallpaper;
@@ -102,9 +101,9 @@ public class MovieDetailActivity extends AppCompatActivity {
                         String duration = movie.getDuration() + " mins";
                         detailDuration.setText(duration);
                         detailDescription.setText(movie.getDescription());
-                        detailRatingAvg.setText(String.valueOf(movie.getRatingAvg())); // Chuyển float thành String
+                        detailRatingAvg.setText(String.valueOf(movie.getRating_avg())); // Chuyển float thành String
                         detailGenres.setText(movie.getGenres());
-                        detailRatingAvg.setText(String.valueOf(movie.getRatingAvg())); // Chuyển float thành String
+                        detailRatingAvg.setText(String.valueOf(movie.getRating_avg())); // Chuyển float thành String
 
                         detailTrailerBtn.setOnClickListener(v -> {
                             try {
