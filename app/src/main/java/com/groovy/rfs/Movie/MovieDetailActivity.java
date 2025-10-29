@@ -15,10 +15,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.bumptech.glide.Glide;
+import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
 import com.groovy.rfs.API.MovieApiService;
 import com.groovy.rfs.API.RetrofitUtils;
+import com.groovy.rfs.Adapter.DetalMovieViewAdapter;
+import com.groovy.rfs.Adapter.PublicListAdapter;
 import com.groovy.rfs.R;
 import com.groovy.rfs.model.Movie;
 import com.groovy.rfs.model.SerResMovieDetail;
@@ -29,6 +34,11 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 
 public class MovieDetailActivity extends AppCompatActivity {
+    //detai vs cast and revoew
+    TabLayout tabLayout;
+    ViewPager2 viewPager;
+    DetalMovieViewAdapter detalMovieViewAdapter;
+    //detail atributes
     private ImageView detailWallpaper;
     private ImageView detailPoster; // Đổi tên từ imageView2 cho rõ
     private TextView detailTitle;
@@ -53,6 +63,13 @@ public class MovieDetailActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        //anh xa fragment
+        tabLayout = findViewById(R.id.tab_layout_moviedetail);
+        viewPager = findViewById(R.id.view_pager_moviedetail);
+
+
+
+        //anh xa
         detailWallpaper = findViewById(R.id.detail_wallpaper);
         detailPoster = findViewById(R.id.detail_poster); // Sử dụng ID bạn đặt trong XML
         detailTitle = findViewById(R.id.detail_title);
@@ -79,6 +96,27 @@ public class MovieDetailActivity extends AppCompatActivity {
             finish(); // Đóng Activity nếu không có ID
         }
 
+        detalMovieViewAdapter = new DetalMovieViewAdapter(this, movieId);
+        viewPager.setAdapter(detalMovieViewAdapter);
+
+        new TabLayoutMediator(tabLayout, viewPager,
+                (tab, position) -> {
+                    // Đặt tên cho từng tab dựa vào vị trí
+                    switch (position) {
+                        case 0:
+                            tab.setText("Reviews");
+                            // Có thể đặt icon: tab.setIcon(R.drawable.ic_film);
+                            break;
+                        case 1:
+                            tab.setText("Details");
+                            break;
+                        case 2:
+                            tab.setText("Cast");
+                            break;
+                    }
+                }
+        ).attach();
+
     }
 
     private void fetchMovieDetails() {
@@ -101,9 +139,9 @@ public class MovieDetailActivity extends AppCompatActivity {
                         String duration = movie.getDuration() + " mins";
                         detailDuration.setText(duration);
                         detailDescription.setText(movie.getDescription());
-                        detailRatingAvg.setText(String.valueOf(movie.getRating_avg())); // Chuyển float thành String
+                        float movieScore = movie.getRating_avg()*2;
+                        detailRatingAvg.setText(String.valueOf(movieScore)); // Chuyển float thành String
                         detailGenres.setText(movie.getGenres());
-                        detailRatingAvg.setText(String.valueOf(movie.getRating_avg())); // Chuyển float thành String
 
                         detailTrailerBtn.setOnClickListener(v -> {
                             try {

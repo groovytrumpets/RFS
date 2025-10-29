@@ -15,7 +15,7 @@
         <item name="postSplashScreenTheme">@style/Base.Theme.RFS</item>
     </style>
     <style name="CustomBottomNavigation" parent="Widget.MaterialComponents.BottomNavigationView">
-        <item name="itemIconSize">20dp</item>
+        <item name="itemIconSize">18dp</item>
         <item name="itemPaddingTop">0dp</item>
         <item name="itemPaddingBottom">0dp</item>
     </style>
