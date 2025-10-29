@@ -31,7 +31,7 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_movies_preview"
         android:layout_width="match_parent"
-        android:layout_height="120dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:orientation="horizontal" />
     <TextView
@@ -42,7 +42,7 @@
         tools:text="Mô tả ngắn gọn của danh sách phim..."
         android:textSize="14sp"
         android:textColor="#AAAAAA"
-        android:maxLines="2"
+        android:maxLines="5"
         android:ellipsize="end"/>
     <View
         android:layout_width="wrap_content"

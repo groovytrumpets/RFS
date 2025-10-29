@@ -35,5 +35,15 @@
         <item name="android:layout_height">1dp</item>
         <item name="android:background">#40FFFFFF</item> <!-- trắng mờ -->
     </style>
+    <style name="MyAlertDialogStyle" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
+        <item name="android:background">#252627</item>
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:textColorSecondary">#DDDDDD</item>
+        <item name="colorAccent">#7EBDC2</item>
+    </style>
+    <style name="CustomRatingBarStyle" parent="Widget.AppCompat.RatingBar.Small">
+        <item name="colorControlNormal">@color/star_empty_color</item>
+        <item name="colorControlActivated">@color/star_filled_color</item>
+    </style>
 
 </resources>

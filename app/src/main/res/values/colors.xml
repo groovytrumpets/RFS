@@ -3,4 +3,6 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="splash_background">#252627</color>
+    <color name="star_filled_color">#7DBCC0</color>
+    <color name="star_empty_color">#191A1C</color>
 </resources>
