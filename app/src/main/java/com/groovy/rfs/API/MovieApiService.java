@@ -5,6 +5,7 @@ import com.groovy.rfs.model.SerResMovieDetail;
 import com.groovy.rfs.model.SerResMovies;
 import com.groovy.rfs.model.SerResMyList;
 import com.groovy.rfs.model.SerResPubLists;
+import com.groovy.rfs.model.SerResReviews;
 
 import retrofit2.Call;
 import retrofit2.http.Field;
@@ -74,4 +75,24 @@ public interface MovieApiService {
     );
     @GET("get_all_public_lists.php") // Tên file PHP
     Call<SerResPubLists> getPublicListsSimple();
+
+    @GET("get_movie_reviews.php") // The name of your PHP file
+    Call<SerResReviews> getMovieReviews(
+            @Query("movie_id") int movieId, // Sends movie_id=... in the URL
+            @Query("limit") Integer limit    // Sends limit=... in the URL (use Integer for optional)
+    );
+    @FormUrlEncoded
+    @POST("add_review.php")
+    Call<SerResBasic> addReview(
+            @Header("Authorization") String authToken,
+            @Field("movie_id") int movieId,
+            @Field("score") float score, // Đảm bảo tên là "score"
+            @Field("comment") String comment
+    );
+    @FormUrlEncoded
+    @POST("delete_review.php") // Dùng POST
+    Call<SerResBasic> deleteReview(
+            @Header("Authorization") String authToken,
+            @Field("movie_id") int movieId
+    );
 }

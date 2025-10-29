@@ -17,6 +17,8 @@ public class AuthUtils {
     private static final String KEY_AUTH_TOKEN = "auth_token";
     private static final String KEY_USER_NAME = "user_fullname";
     private static final String KEY_USER_EMAIL = "user_email";
+    private static final String KEY_USERID = "user_id";
+
     /**
      * DÙNG TRONG: ApiClient (Interceptor)
      * Lấy token bảo mật để xác thực API
@@ -99,5 +101,9 @@ public class AuthUtils {
     public static String getUserEmail(Context context) {
         SharedPreferences prefs = context.getSharedPreferences(REGULAR_PREF_NAME, Context.MODE_PRIVATE);
         return prefs.getString(KEY_USER_EMAIL, "Không có email"); // "Không có email" là mặc định
+    }
+    public static int getKeyUserid(Context context) {
+        SharedPreferences prefs = context.getSharedPreferences(REGULAR_PREF_NAME, Context.MODE_PRIVATE);
+        return prefs.getInt(KEY_USERID, -1);
     }
 }
