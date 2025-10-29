@@ -5,6 +5,7 @@ import com.groovy.rfs.model.SerResMovieDetail;
 import com.groovy.rfs.model.SerResMovies;
 import com.groovy.rfs.model.SerResMyList;
 import com.groovy.rfs.model.SerResPubLists;
+import com.groovy.rfs.model.SerResPublicReviews;
 import com.groovy.rfs.model.SerResReviews;
 
 import retrofit2.Call;
@@ -81,6 +82,7 @@ public interface MovieApiService {
             @Query("movie_id") int movieId, // Sends movie_id=... in the URL
             @Query("limit") Integer limit    // Sends limit=... in the URL (use Integer for optional)
     );
+    @GET("get_all_public_reviews.php") Call<SerResPublicReviews> getAllPublicReviews();
     @FormUrlEncoded
     @POST("add_review.php")
     Call<SerResBasic> addReview(
@@ -95,4 +97,13 @@ public interface MovieApiService {
             @Header("Authorization") String authToken,
             @Field("movie_id") int movieId
     );
+    @FormUrlEncoded
+    @POST("update_review.php")
+    Call<SerResBasic> updateReview(
+            @Header("Authorization") String authToken,
+            @Field("movie_id") int movieId,
+            @Field("score") float newScore,
+            @Field("comment") String newComment
+    );
+
 }

@@ -241,6 +241,79 @@ public class ReviewFragment extends Fragment implements ReviewsAdapter.OnReviewI
                 .show();
     }
 
+    @Override
+    public void onEditReviewClicked(Review review, int position) {
+        showEditReviewDialog(review, position);
+    }
+
+    private void showEditReviewDialog(Review reviewToEdit, int position) {
+        // Inflate layout dialog tùy chỉnh (tạo file layout mới)
+        LayoutInflater inflater = LayoutInflater.from(getContext());
+        View dialogView = inflater.inflate(R.layout.dialog_edit_review, null); // Tạo dialog_edit_review.xml
+
+        // Ánh xạ views trong dialog
+        RatingBar editRatingBar = dialogView.findViewById(R.id.edit_review_rating);
+        EditText editComment = dialogView.findViewById(R.id.edit_review_comment);
+
+        // Điền dữ liệu cũ vào dialog
+        editRatingBar.setRating(reviewToEdit.getScore());
+        editComment.setText(reviewToEdit.getComment());
+
+        // Tạo AlertDialog
+        new AlertDialog.Builder(getContext(),R.style.MyAlertDialogStyle)
+                .setView(dialogView) // Đặt layout tùy chỉnh
+                .setTitle("Edit review")
+                .setPositiveButton("Save", (dialog, which) -> {
+                    // Lấy dữ liệu mới từ dialog
+                    float newScore = editRatingBar.getRating();
+                    String newComment = editComment.getText().toString().trim();
+
+                    // Kiểm tra dữ liệu mới (tương tự hàm submit)
+                    if (newScore == 0) {
+                        Toast.makeText(getContext(), "Vui lòng chọn số sao", Toast.LENGTH_SHORT).show();
+                        return; // Hoặc xử lý khác để giữ dialog mở
+                    }
+
+                    // Gọi hàm thực hiện update
+                    performUpdateReview(reviewToEdit, position, newScore, newComment);
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
+    }
+
+    private void performUpdateReview(Review originalReview, int position, float newScore, String newComment) {
+        String token = AuthUtils.getToken(getContext());
+        if (token == null) { /* ... xử lý lỗi token ... */ return; }
+        Retrofit retrofit = retrofitBuilder();
+        MovieApiService apiService = retrofit.create(MovieApiService.class);
+        // movieId đã có sẵn trong Fragment
+        Call<SerResBasic> call = apiService.updateReview(token, movieId, newScore, newComment);
+
+        Toast.makeText(getContext(), "Đang cập nhật...", Toast.LENGTH_SHORT).show();
+
+        call.enqueue(new Callback<SerResBasic>() {
+            @Override
+            public void onResponse(Call<SerResBasic> call, Response<SerResBasic> response) {
+                if (response.isSuccessful() && response.body().getSuccess() == 1) {
+                    Toast.makeText(getContext(), "Cập nhật thành công!", Toast.LENGTH_SHORT).show();
+
+                    // (QUAN TRỌNG) Cập nhật dữ liệu trong list và báo cho Adapter
+                    originalReview.setScore(newScore); // Giả sử model Review có setter
+                    originalReview.setComment(newComment); // Giả sử model Review có setter
+                    reviewsAdapter.notifyItemChanged(position); // Chỉ cập nhật item đã thay đổi
+
+                } else {
+                    String msg = (response.body() != null) ? response.body().getMessage() : "Cập nhật thất bại";
+                    Toast.makeText(getContext(), msg, Toast.LENGTH_SHORT).show();
+                }
+            }
+            @Override
+            public void onFailure(Call<SerResBasic> call, Throwable t) {
+                Toast.makeText(getContext(), "Lỗi mạng", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
     private void performDeleteReview(Review review, int position) {
         String token = AuthUtils.getToken(getContext());
         if (token == null) { /* ... xử lý lỗi token ... */ return; }
