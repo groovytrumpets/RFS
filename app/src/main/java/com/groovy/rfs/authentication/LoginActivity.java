@@ -266,9 +266,10 @@ public class LoginActivity extends AppCompatActivity {
         editor.putString("user_fullname", user.getUsername()); // Ví dụ lưu tên
         editor.putString("user_email", user.getEmail());     // Ví dụ lưu email
         editor.putInt("user_id", user.getIdUser());           // Ví dụ lưu ID")
+        editor.putString("user_avatar", user.getAvatar());
         // Thêm các trường khác nếu cần
         editor.apply();
-        Log.d("AUTH_SAVE", "User info saved to SharedPreferences. FullName: " + username);
+        Log.d("AUTH_SAVE", "User info saved to SharedPreferences. AvatarURL: " + user.getAvatar());
     }
 
     // Hàm lưu token (đã sửa cho API 21+)

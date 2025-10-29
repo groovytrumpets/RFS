@@ -5,13 +5,21 @@ import java.util.List;
 public class PublicList {
     private int idMovie_collections;
     private String list_name;
-
+    private String avatar;
     private String description;
     private String creator_name;
     private List<MoviePreview> movies_preview;
 
     public List<MoviePreview> getMovies_preview() {
         return movies_preview;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 
     public void setMovies_preview(List<MoviePreview> movies_preview) {

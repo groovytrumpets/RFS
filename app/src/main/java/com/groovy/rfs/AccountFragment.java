@@ -14,11 +14,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.groovy.rfs.User.ListUserActivity;
 import com.groovy.rfs.authentication.AuthActivity;
+import com.groovy.rfs.authentication.AuthUtils;
 import com.groovy.rfs.authentication.CreateAccountActivity;
 import com.groovy.rfs.authentication.LoginActivity;
 
@@ -32,7 +35,7 @@ import java.security.GeneralSecurityException;
  */
 public class AccountFragment extends Fragment {
     Button auth_btn,logoutBtn, viewListBtn;
-
+    ImageView avatar;
     TextView username;
 
 
@@ -86,6 +89,8 @@ public class AccountFragment extends Fragment {
         auth_btn = view.findViewById(R.id.authenBtn);
         logoutBtn = view.findViewById(R.id.logoutBtn);
         username = view.findViewById(R.id.username);
+        avatar = view.findViewById(R.id.avatar);
+
         auth_btn.setOnClickListener(v -> {
             Intent authIntent = new Intent(getActivity(), AuthActivity.class);
             startActivity(authIntent);
@@ -124,6 +129,18 @@ public class AccountFragment extends Fragment {
             logoutBtn.setVisibility(View.VISIBLE);
             username.setVisibility(View.VISIBLE);
             username.setText("Xin chào, " + fullName + "!"); // <-- Sử dụng fullName ở đây
+            String avatarUrl = AuthUtils.getUserAvatarUrl(getContext());
+            if (avatarUrl != null && !avatarUrl.isEmpty()){
+                Glide.with(this) // Dùng 'this' vì đang ở trong Fragment
+                        .load(avatarUrl)
+                        .placeholder(R.mipmap.ic_user_defaut) // Ảnh chờ
+                        .error(R.mipmap.ic_user_defaut)       // Ảnh lỗi
+                        .circleCrop() // Bo tròn nếu muốn
+                        .into(avatar);
+            }else {
+                // Xử lý nếu không có avatar (hiện ảnh mặc định)
+                avatar.setImageResource(R.mipmap.ic_user_defaut);
+            }
         } else {
             Log.d("DEBUG_ACCOUNT", "3. STATUS: LOGGED OUT.");
             // Chưa đăng nhập

@@ -18,6 +18,7 @@ public class AuthUtils {
     private static final String KEY_USER_NAME = "user_fullname";
     private static final String KEY_USER_EMAIL = "user_email";
     private static final String KEY_USERID = "user_id";
+    private static final String KEY_USER_AVATAR = "user_avatar";
 
     /**
      * DÙNG TRONG: ApiClient (Interceptor)
@@ -105,5 +106,9 @@ public class AuthUtils {
     public static int getKeyUserid(Context context) {
         SharedPreferences prefs = context.getSharedPreferences(REGULAR_PREF_NAME, Context.MODE_PRIVATE);
         return prefs.getInt(KEY_USERID, -1);
+    }
+    public static String getUserAvatarUrl(Context context) {
+        SharedPreferences prefs = context.getSharedPreferences(REGULAR_PREF_NAME, Context.MODE_PRIVATE);
+        return prefs.getString(KEY_USER_AVATAR, null); // Trả về null nếu không có
     }
 }
