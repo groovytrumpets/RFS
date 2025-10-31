@@ -3,7 +3,7 @@ package com.groovy.rfs.model;
 import java.util.List;
 
 public class PublicList {
-    private int idMovie_collections;
+    private int idMovie_collections,User_idUser;
     private String list_name;
     private String avatar;
     private String description;
@@ -24,6 +24,14 @@ public class PublicList {
 
     public void setMovies_preview(List<MoviePreview> movies_preview) {
         this.movies_preview = movies_preview;
+    }
+
+    public int getUser_idUser() {
+        return User_idUser;
+    }
+
+    public void setUser_idUser(int user_idUser) {
+        User_idUser = user_idUser;
     }
 
     public String getCreator_name() {

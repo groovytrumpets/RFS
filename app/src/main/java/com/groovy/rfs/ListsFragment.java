@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,7 @@ import com.groovy.rfs.API.MovieApiService;
 import com.groovy.rfs.API.RetrofitUtils;
 import com.groovy.rfs.Adapter.PublicListAdapter;
 import com.groovy.rfs.Public.ListMoviePublicActivity;
+import com.groovy.rfs.User.UserProfileActivity;
 import com.groovy.rfs.model.PublicList;
 import com.groovy.rfs.model.SerResPubLists;
 
@@ -146,6 +148,14 @@ public class ListsFragment extends Fragment implements PublicListAdapter.OnPubli
         Intent intent = new Intent(getActivity(), ListMoviePublicActivity.class);
         intent.putExtra("LIST_ID", list.getIdMovie_collections());
         intent.putExtra("LIST_NAME", list.getList_name());
+        startActivity(intent);
+    }
+
+    @Override
+    public void onUserNameClick(PublicList list) {
+        Intent intent = new Intent(getActivity(), UserProfileActivity.class);
+        intent.putExtra("USER_ID", list.getUser_idUser());
+        Log.d("API_TEST", "USER_ID: " + list.getUser_idUser() + "");
         startActivity(intent);
     }
 }

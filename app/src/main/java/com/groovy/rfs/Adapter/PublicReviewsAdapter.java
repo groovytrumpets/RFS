@@ -27,6 +27,7 @@ public class PublicReviewsAdapter extends RecyclerView.Adapter<PublicReviewsAdap
         void onItemClick(PublicReview review); // Click cả item
         void onEditClick(PublicReview review, int position); // Click nút sửa
         void onDeleteClick(PublicReview review, int position); // Click nút xóa
+        void onUsernameClick(PublicReview review);
     }
 
     public PublicReviewsAdapter(Context context, int currentUserId, OnPublicReviewInteractionListener listener, List<PublicReview> reviews) {
@@ -82,6 +83,12 @@ public class PublicReviewsAdapter extends RecyclerView.Adapter<PublicReviewsAdap
         // Click vào cả item
         holder.itemView.setOnClickListener(v -> {
             if (listener != null) listener.onItemClick(review);
+        });
+        holder.tvUsername.setOnClickListener(v -> {
+            if (listener != null) listener.onUsernameClick(review);
+        });
+        holder.ivAvatar.setOnClickListener(v -> {
+            if (listener != null) listener.onUsernameClick(review);
         });
     }
 
