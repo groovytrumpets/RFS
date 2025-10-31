@@ -4,6 +4,16 @@ public class Review {
     private float score;
     private String comment;
     private String username;
+    private String avatar;
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+
     private int idUser;
 
     public int getIdUser() {

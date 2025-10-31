@@ -6,14 +6,14 @@ public class PublicReview {
     private String comment;
     private int User_idUser; // ID người viết
     private String username;
-    private String avatar_url; // Có thể null
+    private String avatar; // Có thể null
     private int idMovie;
     private String movie_title;
     private Integer release_year; // Dùng Integer để nhận null
     private String movie_poster_url;
 
-    public PublicReview(String avatar_url, String comment, int idMovie, int idRating, String movie_poster_url, String movie_title, Integer release_year, float score, int user_idUser, String username) {
-        this.avatar_url = avatar_url;
+    public PublicReview(String avatar, String comment, int idMovie, int idRating, String movie_poster_url, String movie_title, Integer release_year, float score, int user_idUser, String username) {
+        this.avatar = avatar;
         this.comment = comment;
         this.idMovie = idMovie;
         this.idRating = idRating;
@@ -25,12 +25,12 @@ public class PublicReview {
         this.username = username;
     }
 
-    public String getAvatar_url() {
-        return avatar_url;
+    public String getAvatar() {
+        return avatar;
     }
 
-    public void setAvatar_url(String avatar_url) {
-        this.avatar_url = avatar_url;
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 
     public String getComment() {

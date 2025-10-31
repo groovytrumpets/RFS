@@ -25,23 +25,33 @@ public class User {
     private Date dob;
     private String email, gender, slug;
     private int role;
+    private String avatar;
 
     public User() {
     }
 
-    public User(int idUser, String username, String password, String status, String fullName, String phone, String create_date, Date dob, String email, String gender, String slug, int role) {
-        this.idUser = idUser;
-        this.username = username;
-        this.password = password;
-        this.status = status;
-        this.fullName = fullName;
-        this.phone = phone;
+    public User(String avatar, String create_date, Date dob, String email, String fullName, String gender, int idUser, String password, String phone, int role, String slug, String status, String username) {
+        this.avatar = avatar;
         this.create_date = create_date;
         this.dob = dob;
         this.email = email;
+        this.fullName = fullName;
         this.gender = gender;
-        this.slug = slug;
+        this.idUser = idUser;
+        this.password = password;
+        this.phone = phone;
         this.role = role;
+        this.slug = slug;
+        this.status = status;
+        this.username = username;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 
     public int getIdUser() {

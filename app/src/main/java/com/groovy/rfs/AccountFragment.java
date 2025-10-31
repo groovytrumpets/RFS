@@ -1,10 +1,14 @@
 package com.groovy.rfs;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.fragment.app.Fragment;
 import androidx.security.crypto.EncryptedSharedPreferences;
 import androidx.security.crypto.MasterKey;
@@ -14,16 +18,31 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.cloudinary.android.MediaManager;
+import com.cloudinary.android.callback.ErrorInfo;
+import com.cloudinary.android.callback.UploadCallback;
+import com.groovy.rfs.API.RetrofitUtils;
+import com.groovy.rfs.API.UserApiService;
 import com.groovy.rfs.User.ListUserActivity;
+import com.groovy.rfs.User.ReviewsUserActivity;
+import com.groovy.rfs.User.UserProfileActivity;
 import com.groovy.rfs.authentication.AuthActivity;
-import com.groovy.rfs.authentication.CreateAccountActivity;
-import com.groovy.rfs.authentication.LoginActivity;
+import com.groovy.rfs.authentication.AuthUtils;
+import com.groovy.rfs.model.SerResAvatarUpdate;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
+import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -31,8 +50,8 @@ import java.security.GeneralSecurityException;
  * create an instance of this fragment.
  */
 public class AccountFragment extends Fragment {
-    Button auth_btn,logoutBtn, viewListBtn;
-
+    Button auth_btn,logoutBtn, viewListBtn, myReviewsBtn;
+    ImageView avatar;
     TextView username;
 
 
@@ -86,6 +105,23 @@ public class AccountFragment extends Fragment {
         auth_btn = view.findViewById(R.id.authenBtn);
         logoutBtn = view.findViewById(R.id.logoutBtn);
         username = view.findViewById(R.id.username);
+        avatar = view.findViewById(R.id.avatar);
+        myReviewsBtn = view.findViewById(R.id.myReviewsbtn);
+        avatar.setOnClickListener(v -> {
+            Intent intent = new Intent(Intent.ACTION_PICK);
+            intent.setType("image/*");
+            pickImageLauncher.launch(intent);
+        });
+
+        myReviewsBtn.setOnClickListener(v -> {
+            Intent reviewOfUser = new Intent(getActivity(), ReviewsUserActivity.class);
+            startActivity(reviewOfUser);
+        });
+        username.setOnClickListener(v -> {
+            Intent reviewOfUser = new Intent(getActivity(), UserProfileActivity.class);
+            startActivity(reviewOfUser);
+        });
+
         auth_btn.setOnClickListener(v -> {
             Intent authIntent = new Intent(getActivity(), AuthActivity.class);
             startActivity(authIntent);
@@ -98,6 +134,7 @@ public class AccountFragment extends Fragment {
             Intent authIntent = new Intent(getActivity(), ListUserActivity.class);
             startActivity(authIntent);
         });
+
 
 
 
@@ -124,6 +161,18 @@ public class AccountFragment extends Fragment {
             logoutBtn.setVisibility(View.VISIBLE);
             username.setVisibility(View.VISIBLE);
             username.setText("Xin chào, " + fullName + "!"); // <-- Sử dụng fullName ở đây
+            String avatarUrl = AuthUtils.getUserAvatarUrl(getContext());
+            if (avatarUrl != null && !avatarUrl.isEmpty()){
+                Glide.with(this) // Dùng 'this' vì đang ở trong Fragment
+                        .load(avatarUrl)
+                        .placeholder(R.mipmap.ic_user_defaut) // Ảnh chờ
+                        .error(R.mipmap.ic_user_defaut)       // Ảnh lỗi
+                        .circleCrop() // Bo tròn nếu muốn
+                        .into(avatar);
+            }else {
+                // Xử lý nếu không có avatar (hiện ảnh mặc định)
+                avatar.setImageResource(R.mipmap.ic_user_defaut);
+            }
         } else {
             Log.d("DEBUG_ACCOUNT", "3. STATUS: LOGGED OUT.");
             // Chưa đăng nhập
@@ -177,5 +226,91 @@ public class AccountFragment extends Fragment {
         // Intent intent = new Intent(getActivity(), MainActivity.class);
         // intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK); // Đóng mọi Activity cũ
         // startActivity(intent);
+    }
+    private ActivityResultLauncher<Intent> pickImageLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+                    Uri imageUri = result.getData().getData();
+                    if (imageUri != null) {
+                        // Hiển thị ảnh mới (preview)
+                        Glide.with(this).load(imageUri).circleCrop().into(avatar);
+
+                        // Bắt đầu upload
+                        uploadAvatarToServer(imageUri);
+                    }
+                }
+            }
+    );
+
+    private void uploadAvatarToServer(Uri imageUri) {
+        Toast.makeText(getContext(), "Đang tải ảnh lên...", Toast.LENGTH_SHORT).show();
+
+        MediaManager.get().upload(imageUri)
+                .callback(new UploadCallback() {
+                    @Override
+                    public void onStart(String requestId) { }
+
+                    @Override
+                    public void onProgress(String requestId, long bytes, long totalBytes) { }
+
+                    @Override
+                    public void onSuccess(String requestId, Map resultData) {
+                        // 3.1. Upload lên Cloudinary thành công -> Lấy URL
+                        String secureUrl = (String) resultData.get("secure_url");
+                        Log.d("Cloudinary", "Upload thành công: " + secureUrl);
+
+                        // 3.2. Gửi URL này về server PHP của bạn
+                        callUpdateAvatarApi(secureUrl);
+                    }
+
+                    @Override
+                    public void onError(String requestId, ErrorInfo error) {
+                        Toast.makeText(getContext(), "Upload ảnh thất bại: " + error.getDescription(), Toast.LENGTH_LONG).show();
+                    }
+
+                    @Override
+                    public void onReschedule(String requestId, ErrorInfo error) { }
+                })
+                .dispatch(); // Bắt đầu upload
+    }
+
+    private void callUpdateAvatarApi(String imageUrl) {
+        String token = AuthUtils.getToken(getContext());
+        if (token == null) { /* ... (xử lý lỗi token) ... */ return; }
+        Retrofit retrofit = RetrofitUtils.retrofitBuilder();
+        UserApiService apiService = retrofit.create(UserApiService.class);
+
+        Call<SerResAvatarUpdate> call = apiService.updateAvatarUrl(token, imageUrl);
+
+        call.enqueue(new Callback<SerResAvatarUpdate>() {
+            @Override
+            public void onResponse(Call<SerResAvatarUpdate> call, Response<SerResAvatarUpdate> response) {
+                if (response.isSuccessful() && response.body().getSuccess() == 1) {
+                    Toast.makeText(getContext(), "Cập nhật avatar thành công!", Toast.LENGTH_SHORT).show();
+
+                    // 5. CẬP NHẬT SharedPreferences
+                    String newUrl = response.body().getNew_avatar_url();
+                    AuthUtils.updateUserAvatarUrl(getContext(), newUrl);
+
+                    if (getContext() != null) {
+                        Glide.with(AccountFragment.this) // Dùng 'this' hoặc 'getContext()'
+                                .load(newUrl) // Tải URL mới
+                                .circleCrop()
+                                .placeholder(R.mipmap.ic_user_defaut)
+                                .error(R.mipmap.ic_user_defaut)
+                                .into(avatar); // Gán vào ImageView avatar
+                    }
+
+
+                } else {
+                    Toast.makeText(getContext(), "Lỗi khi lưu vào CSDL", Toast.LENGTH_SHORT).show();
+                }
+            }
+            @Override
+            public void onFailure(Call<SerResAvatarUpdate> call, Throwable t) {
+                Toast.makeText(getContext(), "Lỗi mạng khi lưu CSDL", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

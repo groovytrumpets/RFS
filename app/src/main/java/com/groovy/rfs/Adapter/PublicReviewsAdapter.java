@@ -53,7 +53,12 @@ public class PublicReviewsAdapter extends RecyclerView.Adapter<PublicReviewsAdap
         holder.rbScore.setRating(review.getScore());
         holder.tvComment.setText(review.getComment());
 
-
+        Glide.with(context)
+                .load(review.getAvatar()) // Lấy URL avatar từ model
+                .placeholder(R.mipmap.ic_user_defaut) // Ảnh chờ
+                .error(R.mipmap.ic_user_defaut)       // Ảnh lỗi
+                .circleCrop() // Bo tròn
+                .into(holder.ivAvatar); // ImageView trong ViewHolder
         Glide.with(context).load(review.getMovie_poster_url()).placeholder(R.drawable.placeholder_poster).into(holder.ivPoster);
 
         // Hiển thị nút sửa/xóa nếu là review của user hiện tại

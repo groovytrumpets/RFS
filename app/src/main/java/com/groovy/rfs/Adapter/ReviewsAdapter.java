@@ -6,12 +6,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.groovy.rfs.R;
 import com.groovy.rfs.model.Review;
 
@@ -50,6 +52,14 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ViewHold
         holder.tvUsername.setText(review.getUsername());
         holder.rbRating.setRating(review.getScore());
         holder.tvComment.setText(review.getComment());
+
+
+        Glide.with(context)
+                .load(review.getAvatar()) // Lấy URL avatar từ model
+                .placeholder(R.mipmap.ic_user_defaut) // Ảnh chờ
+                .error(R.mipmap.ic_user_defaut)       // Ảnh lỗi
+                .circleCrop() // Bo tròn
+                .into(holder.ivAvatar); // ImageView trong ViewHolder
         final boolean isExpanded = expandedState.get(position, false);
         if (isExpanded) {
             holder.tvComment.setMaxLines(Integer.MAX_VALUE); // Hiện hết
@@ -94,13 +104,13 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ViewHold
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-//        ImageView ivAvatar;
+        ImageView ivAvatar;
         ImageButton btnDelete,btnEdit;
         TextView tvUsername, tvComment;
         RatingBar rbRating;
         ViewHolder(@NonNull View itemView) {
             super(itemView);
-//            ivAvatar = itemView.findViewById(R.id.iv_avatar);
+            ivAvatar = itemView.findViewById(R.id.iv_avatar);
             tvUsername = itemView.findViewById(R.id.tv_username);
             tvComment = itemView.findViewById(R.id.tv_comment);
             rbRating = itemView.findViewById(R.id.rb_rating_display);
