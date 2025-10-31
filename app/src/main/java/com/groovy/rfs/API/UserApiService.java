@@ -1,10 +1,12 @@
 package com.groovy.rfs.API;
 
+import com.groovy.rfs.model.SerResAvatarUpdate;
 import com.groovy.rfs.model.SevResUser;
 
 import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
+import retrofit2.http.Header;
 import retrofit2.http.POST;
 
 public interface UserApiService {
@@ -26,5 +28,11 @@ public interface UserApiService {
     Call<SevResUser> loginUser( // Assuming SevResUser can hold token and user data
                                 @Field("identifier") String identifier,
                                 @Field("password") String password
+    );
+    @FormUrlEncoded
+    @POST("update_avatar_url.php")
+    Call<SerResAvatarUpdate> updateAvatarUrl(
+            @Header("Authorization") String authToken,
+            @Field("avatar_url") String newUrl // Chỉ gửi URL (text)
     );
 }

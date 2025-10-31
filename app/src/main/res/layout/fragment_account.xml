@@ -94,16 +94,11 @@
                 app:backgroundTint="#F3DFA2" />
 
             <!-- My Profile -->
-            <Button
-                android:layout_marginTop="20dp"
-                android:id="@+id/myProfilebtn"
-                style="@style/AccountItemButton"
-                android:text="Profile" />
 
-            <View style="@style/DividerLine" />
 
             <!-- My Reviews -->
             <Button
+                android:layout_marginTop="20dp"
                 android:id="@+id/myReviewsbtn"
                 style="@style/AccountItemButton"
                 android:text="Reviews" />
@@ -144,6 +139,13 @@
                 android:textColor="#FFFFFF"
                 android:visibility="gone"
                 app:backgroundTint="#BB4430" />
+            <Button
+                android:layout_marginTop="20dp"
+                android:id="@+id/myProfilebtn"
+                style="@style/AccountItemButton"
+                android:text="Upgrade to PRO 👑" />
+
+            <View style="@style/DividerLine" />
 
         </LinearLayout>
     </ScrollView>

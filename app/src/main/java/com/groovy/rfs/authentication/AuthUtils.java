@@ -33,6 +33,15 @@ public class AuthUtils {
             return null;
         }
     }
+    /**
+     * Hàm này được gọi sau khi upload thành công để lưu URL mới
+     */
+    public static void updateUserAvatarUrl(Context context, String newUrl) {
+        SharedPreferences prefs = context.getSharedPreferences(REGULAR_PREF_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString(KEY_USER_AVATAR, newUrl);
+        editor.apply();
+    }
 
     /**
      * DÙNG TRONG: ProfileFragment

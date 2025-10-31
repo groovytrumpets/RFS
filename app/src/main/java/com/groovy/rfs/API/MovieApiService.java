@@ -83,6 +83,10 @@ public interface MovieApiService {
             @Query("limit") Integer limit    // Sends limit=... in the URL (use Integer for optional)
     );
     @GET("get_all_public_reviews.php") Call<SerResPublicReviews> getAllPublicReviews();
+    @GET("get_my_reviews.php")
+    Call<SerResPublicReviews> getMyReviews(
+            @Header("Authorization") String authToken
+    );
     @FormUrlEncoded
     @POST("add_review.php")
     Call<SerResBasic> addReview(

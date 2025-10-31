@@ -10,7 +10,10 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import java.util.HashMap;
+import java.util.Map;
 
+import com.cloudinary.android.MediaManager;
 import com.groovy.rfs.databinding.ActivityMainBinding;
 import androidx.core.splashscreen.SplashScreen;
 public class MainActivity extends AppCompatActivity {
@@ -23,6 +26,16 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
         //set trang home la mac dinh
         replaceFragment(new HomeFragment());
+
+        //cloudary
+
+            Map config = new HashMap();
+            config.put("cloud_name", "dlevje6nq"); // <-- Dán Cloud Name vào đây
+            config.put("api_key", "592377633532273");
+            config.put("api_secret", "FBTKYhNfNykcSC_9olyP6UoN2Hw");
+            MediaManager.init(this, config);
+
+
 
         binding.bottomNavigationView.setOnItemSelectedListener(item -> {
             int itemId = item.getItemId();

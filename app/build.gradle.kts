@@ -35,6 +35,8 @@ android {
 }
 
 dependencies {
+    implementation("com.facebook.fresco:fresco:3.6.0")
+    implementation("com.cloudinary:cloudinary-android:3.0.2")
     implementation("androidx.core:core-splashscreen:1.0.1")
     implementation("com.squareup.retrofit2:retrofit:3.0.0")
     implementation("com.squareup.picasso:picasso:2.8")
