@@ -3,6 +3,7 @@ package com.groovy.rfs.Movie;
 import static com.groovy.rfs.API.RetrofitUtils.retrofitBuilder;
 
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -25,6 +26,7 @@ import com.groovy.rfs.API.MovieApiService;
 import com.groovy.rfs.API.RetrofitUtils;
 import com.groovy.rfs.Adapter.ReviewsAdapter;
 import com.groovy.rfs.R;
+import com.groovy.rfs.User.UserProfileActivity;
 import com.groovy.rfs.authentication.AuthUtils;
 import com.groovy.rfs.model.Review;
 import com.groovy.rfs.model.SerResBasic;
@@ -244,6 +246,13 @@ public class ReviewFragment extends Fragment implements ReviewsAdapter.OnReviewI
     @Override
     public void onEditReviewClicked(Review review, int position) {
         showEditReviewDialog(review, position);
+    }
+
+    @Override
+    public void onUsernameClick(Review review) {
+        Intent intent = new Intent(getActivity(), UserProfileActivity.class);
+        intent.putExtra("USER_ID", review.getIdUser());
+        startActivity(intent);
     }
 
     private void showEditReviewDialog(Review reviewToEdit, int position) {

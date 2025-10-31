@@ -6,8 +6,10 @@ import com.groovy.rfs.model.SevResUser;
 import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
+import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
+import retrofit2.http.Query;
 
 public interface UserApiService {
     @FormUrlEncoded
@@ -35,4 +37,6 @@ public interface UserApiService {
             @Header("Authorization") String authToken,
             @Field("avatar_url") String newUrl // Chỉ gửi URL (text)
     );
+    @GET("get_user_profile.php")
+    Call<SevResUser> getUserProfile(@Query("user_id") int userId);
 }

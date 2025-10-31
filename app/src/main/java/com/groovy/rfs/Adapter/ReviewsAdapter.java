@@ -30,6 +30,7 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ViewHold
     public interface OnReviewInteractionListener {
         void onDeleteReviewClicked(Review review, int position);
         void onEditReviewClicked(Review review, int position);
+        void onUsernameClick(Review review);
     }
     private OnReviewInteractionListener interactionListener;
     public ReviewsAdapter(Context context, List<Review> reviews, int currentUserId, OnReviewInteractionListener interactionListener) {
@@ -66,6 +67,16 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ViewHold
         } else {
             holder.tvComment.setMaxLines(COLLAPSED_MAX_LINES); // Chỉ hiện 3 dòng
         }
+        holder.tvUsername.setOnClickListener(v -> {
+            if (interactionListener != null) {
+                interactionListener.onUsernameClick(review);
+            }
+        });
+        holder.ivAvatar.setOnClickListener(v -> {
+            if (interactionListener != null) {
+                interactionListener.onUsernameClick(review);
+            }
+        });
         // Luôn set ellipsize để dấu "..." hiện đúng
         holder.tvComment.setEllipsize(android.text.TextUtils.TruncateAt.END);
 
@@ -77,7 +88,7 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ViewHold
             // Quan trọng: Chỉ cập nhật item này, không cần notifyDataSetChanged()
             notifyItemChanged(holder.getAdapterPosition());
         });
-        if (review.getIdUser() == currentUserId) { // Giả sử model có getUserId()
+        if (review.getIdUser() == currentUserId) {
             holder.btnDelete.setVisibility(View.VISIBLE);
             holder.btnDelete.setOnClickListener(v -> {
                 if (interactionListener != null) {

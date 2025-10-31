@@ -200,6 +200,14 @@ public class ReviewsUserActivity extends AppCompatActivity implements PublicRevi
 
     }
 
+    @Override
+    public void onUsernameClick(PublicReview review) {
+        int userId = review.getUser_idUser();
+        Intent intent = new Intent(this, UserProfileActivity.class);
+        intent.putExtra("USER_ID", userId);
+        startActivity(intent);
+    }
+
     private void performDeleteReview(PublicReview review, int position) {
         String token = AuthUtils.getToken(this);
         if (token == null) { /* ... xử lý lỗi token ... */ return; }

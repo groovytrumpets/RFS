@@ -25,6 +25,7 @@ import com.groovy.rfs.API.RetrofitUtils;
 import com.groovy.rfs.Adapter.PublicReviewsAdapter;
 import com.groovy.rfs.Movie.MovieDetailActivity;
 import com.groovy.rfs.Movie.ReviewFragment;
+import com.groovy.rfs.User.UserProfileActivity;
 import com.groovy.rfs.authentication.AuthUtils;
 import com.groovy.rfs.model.PublicReview;
 import com.groovy.rfs.model.Review;
@@ -45,6 +46,14 @@ import retrofit2.Retrofit;
  * create an instance of this fragment.
  */
 public class ReviewsFragment extends Fragment implements PublicReviewsAdapter.OnPublicReviewInteractionListener {
+    @Override
+    public void onUsernameClick(PublicReview review) {
+        int userId = review.getUser_idUser();
+        Intent intent = new Intent(getActivity(), UserProfileActivity.class);
+        intent.putExtra("USER_ID", userId);
+        startActivity(intent);
+
+    }
 
     private RecyclerView recyclerView;
     private PublicReviewsAdapter adapter;
