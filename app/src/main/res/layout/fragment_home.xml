@@ -24,7 +24,7 @@
         android:id="@+id/header_container"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:orientation="horizontal"
         android:gravity="center"
         android:paddingTop="8dp"
         android:paddingBottom="12dp"
@@ -42,8 +42,20 @@
             android:textSize="20sp"
             android:fontFamily="@font/valorant"
             android:letterSpacing="0.03" />
+
     </LinearLayout>
 
+    <include
+        android:id="@+id/notification_button"
+        layout="@layout/notification_button_layout"
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
     <!-- Thanh TabLayout hiện các fragment -->
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tab_layout_home"
