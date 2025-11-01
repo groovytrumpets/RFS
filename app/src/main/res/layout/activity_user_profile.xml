@@ -124,7 +124,7 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="28dp"
-                android:text="Follow"
+                android:text="Add Friend"
                 android:textSize="15dp"
                 android:visibility="gone"
                 app:layout_constraintBottom_toTopOf="@+id/detail_description"

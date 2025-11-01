@@ -1,6 +1,9 @@
 package com.groovy.rfs.API;
 
 import com.groovy.rfs.model.SerResAvatarUpdate;
+import com.groovy.rfs.model.SerResBasic;
+import com.groovy.rfs.model.SerResFriendStatus;
+import com.groovy.rfs.model.SerResNotifications;
 import com.groovy.rfs.model.SevResUser;
 
 import retrofit2.Call;
@@ -39,4 +42,37 @@ public interface UserApiService {
     );
     @GET("get_user_profile.php")
     Call<SevResUser> getUserProfile(@Query("user_id") int userId);
+    @FormUrlEncoded
+    @POST("send_friend_request.php")
+    Call<SerResBasic> sendFriendRequest(
+            @Header("Authorization") String authToken,
+            @Field("receiver_id") int receiverId
+    );
+    @GET("check_friendship_status.php")
+    Call<SerResFriendStatus> checkFriendshipStatus(
+            @Header("Authorization") String authToken,
+            @Query("profile_id") int profileId
+    );
+    @FormUrlEncoded
+    @POST("accept_friend_request.php")
+    Call<SerResFriendStatus> acceptFriendRequest(
+            @Header("Authorization") String authToken,
+            @Field("friendship_id") int friendshipId
+    );
+    @GET("get_my_notifications.php")
+    Call<SerResNotifications> getMyNotifications(
+            @Header("Authorization") String authToken
+    );
+    @FormUrlEncoded
+    @POST("decline_friend_request.php")
+    Call<SerResBasic> declineFriendRequest(
+            @Header("Authorization") String authToken,
+            @Field("friendship_id") int friendshipId
+    );
+    @FormUrlEncoded
+    @POST("unfriend_user.php")
+    Call<SerResBasic> unfriendUser(
+            @Header("Authorization") String authToken,
+            @Field("user_to_unfriend_id") int userToUnfriendId
+    );
 }

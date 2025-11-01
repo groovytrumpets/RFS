@@ -17,6 +17,7 @@ import com.cloudinary.android.MediaManager;
 import com.groovy.rfs.databinding.ActivityMainBinding;
 import androidx.core.splashscreen.SplashScreen;
 public class MainActivity extends AppCompatActivity {
+    private static boolean cloudaryIsCreated = false;
     ActivityMainBinding binding;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,13 +29,15 @@ public class MainActivity extends AppCompatActivity {
         replaceFragment(new HomeFragment());
 
         //cloudary
+if (!cloudaryIsCreated){
 
             Map config = new HashMap();
             config.put("cloud_name", "dlevje6nq"); // <-- Dán Cloud Name vào đây
             config.put("api_key", "592377633532273");
             config.put("api_secret", "FBTKYhNfNykcSC_9olyP6UoN2Hw");
             MediaManager.init(this, config);
-
+            cloudaryIsCreated=true;
+}
 
 
         binding.bottomNavigationView.setOnItemSelectedListener(item -> {
