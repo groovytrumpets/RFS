@@ -129,6 +129,11 @@
 
             <View style="@style/DividerLine" />
 
+            <Button
+                android:layout_marginTop="20dp"
+                android:id="@+id/PRO"
+                style="@style/AccountItemButton"
+                android:text="Upgrade to PRO 👑" />
             <!-- Logout -->
             <Button
                 android:id="@+id/logoutBtn"
@@ -138,12 +143,8 @@
                 android:text="Logout"
                 android:textColor="#FFFFFF"
                 android:visibility="gone"
-                app:backgroundTint="#BB4430" />
-            <Button
-                android:layout_marginTop="20dp"
-                android:id="@+id/myProfilebtn"
-                style="@style/AccountItemButton"
-                android:text="Upgrade to PRO 👑" />
+                app:backgroundTint="#BB4430"
+                tools:visibility="visible"/>
 
             <View style="@style/DividerLine" />
 

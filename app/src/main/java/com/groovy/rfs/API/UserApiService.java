@@ -4,6 +4,8 @@ import com.groovy.rfs.model.SerResAvatarUpdate;
 import com.groovy.rfs.model.SerResBasic;
 import com.groovy.rfs.model.SerResFriendStatus;
 import com.groovy.rfs.model.SerResNotifications;
+import com.groovy.rfs.model.SerResPayment;
+import com.groovy.rfs.model.SerResStatus;
 import com.groovy.rfs.model.SevResUser;
 
 import retrofit2.Call;
@@ -74,5 +76,17 @@ public interface UserApiService {
     Call<SerResBasic> unfriendUser(
             @Header("Authorization") String authToken,
             @Field("user_to_unfriend_id") int userToUnfriendId
+    );
+    @FormUrlEncoded
+    @POST("create_payment_order.php")
+    Call<SerResPayment> createPaymentOrder(
+            @Header("Authorization") String authToken,
+            @Field("amount") int amount,
+            @Field("payment_method") String paymentMethod // "VNPAY"
+    );
+    @GET("check_payment_status.php")
+    Call<SerResStatus> checkPaymentStatus(
+            @Header("Authorization") String authToken,
+            @Query("order_code") String orderCode
     );
 }
