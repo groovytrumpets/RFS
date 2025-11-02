@@ -28,6 +28,7 @@ import com.cloudinary.android.callback.ErrorInfo;
 import com.cloudinary.android.callback.UploadCallback;
 import com.groovy.rfs.API.RetrofitUtils;
 import com.groovy.rfs.API.UserApiService;
+import com.groovy.rfs.Public.PROActivity;
 import com.groovy.rfs.User.ListUserActivity;
 import com.groovy.rfs.User.ReviewsUserActivity;
 import com.groovy.rfs.User.UserProfileActivity;
@@ -50,7 +51,7 @@ import retrofit2.Retrofit;
  * create an instance of this fragment.
  */
 public class AccountFragment extends Fragment {
-    Button auth_btn,logoutBtn, viewListBtn, myReviewsBtn;
+    Button auth_btn,logoutBtn, viewListBtn, myReviewsBtn,PRO_btn;
     ImageView avatar;
     TextView username;
 
@@ -107,6 +108,7 @@ public class AccountFragment extends Fragment {
         username = view.findViewById(R.id.username);
         avatar = view.findViewById(R.id.avatar);
         myReviewsBtn = view.findViewById(R.id.myReviewsbtn);
+        PRO_btn = view.findViewById(R.id.PRO);
         avatar.setOnClickListener(v -> {
             Intent intent = new Intent(Intent.ACTION_PICK);
             intent.setType("image/*");
@@ -132,6 +134,10 @@ public class AccountFragment extends Fragment {
         viewListBtn = view.findViewById(R.id.myListbtn);
         viewListBtn.setOnClickListener(v -> {
             Intent authIntent = new Intent(getActivity(), ListUserActivity.class);
+            startActivity(authIntent);
+        });
+        PRO_btn.setOnClickListener(v -> {
+            Intent authIntent = new Intent(getActivity(), PROActivity.class);
             startActivity(authIntent);
         });
 

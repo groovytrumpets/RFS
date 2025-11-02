@@ -15,6 +15,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.RFS">
         <activity
+            android:name=".Public.PaymentWebViewActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Public.PROActivity"
+            android:exported="false" />
+        <activity
             android:name=".User.NotificationsActivity"
             android:exported="false" />
         <activity
@@ -60,6 +66,9 @@
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <intent-filter>
+                <data android:scheme="rfs" android:host="payment-return"/>
             </intent-filter>
         </activity>
     </application>
