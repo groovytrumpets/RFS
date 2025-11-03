@@ -33,7 +33,7 @@ import retrofit2.Retrofit;
 
 public class UserProfileActivity extends AppCompatActivity {
     private ImageView detail_wallpaper, avatar;
-    private TextView detail_title, detail_year, tvusername;
+    private TextView friendCount, createYear, tvusername, reviewCount;
     private Button addfriend_btn;
     private int userIdToLoad = -1;
     private int myUserId = -1;
@@ -51,11 +51,12 @@ public class UserProfileActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        createYear = findViewById(R.id.detail_year);
+        friendCount = findViewById(R.id.detail_director);
+        reviewCount = findViewById(R.id.detail_rating_avg);
         //ax
         detail_wallpaper = findViewById(R.id.detail_wallpaper);
         avatar = findViewById(R.id.avatar);
-        detail_title = findViewById(R.id.detail_description);
-        detail_year = findViewById(R.id.detail_year);
         tvusername = findViewById(R.id.username);
         btn_cancel = findViewById(R.id.btn_cancel);
         btn_cancel.setOnClickListener(v -> {finish();});
@@ -67,7 +68,7 @@ public class UserProfileActivity extends AppCompatActivity {
 //        Log.d("API_TEST", "myUserId: " + myUserId + "");
 //        Log.d("API_TEST", "userIdToLoad: " + userIdToLoad + "");
         if (userIdToLoad == myUserId) {
-            loadUserProfile();
+            loadUserProfileFromApi(myUserId);
         } else {
             loadUserProfileFromApi(userIdToLoad);
             checkStatus(userIdToLoad);
@@ -77,6 +78,7 @@ public class UserProfileActivity extends AppCompatActivity {
             sendRequest(userIdToLoad);
 
         });
+
     }
 
     private void checkStatus(int userIdToLoad) {
@@ -267,6 +269,9 @@ public class UserProfileActivity extends AppCompatActivity {
                     tvusername.setText(user.getUsername());
                     //
                     addfriend_btn.setVisibility(View.VISIBLE);
+                    createYear.setText("Join since "+user.getJoin_year());
+                    friendCount.setText(user.getFriend_count() + " Friends");
+                    reviewCount.setText(user.getRating_count() + " Reviews");
 
                     //addfriend_btn.setVisibility(!AuthUtils.getUserName(UserProfileActivity.this)
                     //        .equals(user.getUsername())? View.VISIBLE : View.GONE);
