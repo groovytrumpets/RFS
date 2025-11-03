@@ -19,6 +19,7 @@ public class AuthUtils {
     private static final String KEY_USER_EMAIL = "user_email";
     private static final String KEY_USERID = "user_id";
     private static final String KEY_USER_AVATAR = "user_avatar";
+    private static final String KEY_USER_STATUS = "user_status";
 
     /**
      * DÙNG TRONG: ApiClient (Interceptor)
@@ -119,5 +120,23 @@ public class AuthUtils {
     public static String getUserAvatarUrl(Context context) {
         SharedPreferences prefs = context.getSharedPreferences(REGULAR_PREF_NAME, Context.MODE_PRIVATE);
         return prefs.getString(KEY_USER_AVATAR, null); // Trả về null nếu không có
+    }
+    /**
+     * (MỚI) Lấy trạng thái của người dùng (ví dụ: "active" hoặc "pro")
+     */
+    public static String getUserStatus(Context context) {
+        SharedPreferences prefs = context.getSharedPreferences(REGULAR_PREF_NAME, Context.MODE_PRIVATE);
+        // Trả về "active" (hoặc rỗng) nếu không tìm thấy
+        return prefs.getString(KEY_USER_STATUS, "active");
+    }
+
+    /**
+     * (MỚI) Cập nhật trạng thái người dùng (dùng sau khi thanh toán)
+     */
+    public static void updateUserStatus(Context context, String newStatus) {
+        SharedPreferences prefs = context.getSharedPreferences(REGULAR_PREF_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString(KEY_USER_STATUS, newStatus);
+        editor.apply();
     }
 }

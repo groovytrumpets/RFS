@@ -1,10 +1,13 @@
 package com.groovy.rfs;
 
+import static android.view.View.GONE;
+
 import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -13,6 +16,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.groovy.rfs.API.MovieApiService;
@@ -20,6 +26,7 @@ import com.groovy.rfs.API.RetrofitUtils;
 import com.groovy.rfs.Adapter.PublicListAdapter;
 import com.groovy.rfs.Public.ListMoviePublicActivity;
 import com.groovy.rfs.User.UserProfileActivity;
+import com.groovy.rfs.authentication.AuthUtils;
 import com.groovy.rfs.model.PublicList;
 import com.groovy.rfs.model.SerResPubLists;
 
@@ -36,10 +43,13 @@ import retrofit2.Retrofit;
  * Use the {@link ListsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ListsFragment extends Fragment implements PublicListAdapter.OnPublicListClickListener{
+public class ListsFragment extends Fragment implements PublicListAdapter.OnPublicListClickListener, CompoundButton.OnCheckedChangeListener {
     private RecyclerView recyclerView;
     private PublicListAdapter adapter; // Đổi adapter
     private List<PublicList> publicListsData = new ArrayList<>(); // Đổi kiểu dữ liệu
+    private SwitchCompat switchFilter;
+    private TextView tvFilterLabel;
+    LinearLayout filter;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -97,13 +107,34 @@ public class ListsFragment extends Fragment implements PublicListAdapter.OnPubli
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
 
-        fetchPublicLists(); // Gọi hàm API mới
+        switchFilter = view.findViewById(R.id.switch_reviews_filter);
+        tvFilterLabel = view.findViewById(R.id.tv_filter_label);
+        filter = view.findViewById(R.id.ll_filter);
+        switchFilter.setOnCheckedChangeListener(this);
+
+        fetchPublicLists(false); // Gọi hàm API mới
     }
 
-    private void fetchPublicLists() {
+    private void fetchPublicLists(boolean isFriendOnly) {
         Retrofit retrofit = RetrofitUtils.retrofitBuilder();
         MovieApiService apiService = retrofit.create(MovieApiService.class);
-        Call<SerResPubLists> call = apiService.getPublicListsSimple();
+        Call<SerResPubLists> call ;
+
+
+        if (isFriendOnly){
+            tvFilterLabel.setText("Friend reviews");
+            String token = AuthUtils.getToken(getContext());
+            if (token==null){
+                filter.setVisibility(GONE);
+                Toast.makeText(getContext(), "Please Login", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            call = apiService.getFriendsLists(token);
+        }else {
+            tvFilterLabel.setText("All lists");
+            call = apiService.getPublicListsSimple();
+        }
+
         call.enqueue(new Callback<SerResPubLists>() {
             @Override
             public void onResponse(Call<SerResPubLists> call, Response<SerResPubLists> response) {
@@ -136,7 +167,7 @@ public class ListsFragment extends Fragment implements PublicListAdapter.OnPubli
                 // progressBar.setVisibility(View.GONE);
 
                 // Lỗi mạng hoặc lỗi parsing JSON
-                Toast.makeText(getContext(), "Lỗi mạng: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "API error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -157,5 +188,10 @@ public class ListsFragment extends Fragment implements PublicListAdapter.OnPubli
         intent.putExtra("USER_ID", list.getUser_idUser());
         Log.d("API_TEST", "USER_ID: " + list.getUser_idUser() + "");
         startActivity(intent);
+    }
+
+    @Override
+    public void onCheckedChanged(@NonNull CompoundButton buttonView, boolean isChecked) {
+        fetchPublicLists(isChecked);
     }
 }

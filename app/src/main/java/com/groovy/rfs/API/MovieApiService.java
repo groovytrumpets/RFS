@@ -109,5 +109,13 @@ public interface MovieApiService {
             @Field("score") float newScore,
             @Field("comment") String newComment
     );
+    @GET("get_friends_reviews.php")
+    Call<SerResPublicReviews> getFriendsReviews(
+            @Header("Authorization") String authToken // Cần token
+    );
+    @GET("get_friends_lists.php")
+    Call<SerResPubLists> getFriendsLists(
+            @Header("Authorization") String authToken // Cần token
+    );
 
 }

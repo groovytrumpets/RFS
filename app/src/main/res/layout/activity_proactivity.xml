@@ -12,7 +12,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Nâng cấp PRO"
+        android:text="Upgrade to PRO"
         android:textColor="@color/white"
         android:textSize="24sp"
         android:textStyle="bold"
@@ -21,7 +21,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Giá: 50,000đ / trọn đời"
+        android:text="Price: 50,000đ / life time"
         android:textColor="#F3DFA2"
         android:textSize="18sp"
         android:layout_gravity="center_horizontal"
@@ -30,7 +30,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Chọn phương thức thanh toán:"
+        android:text="Choose payment method:"
         android:textColor="#AAAAAA"
         android:textSize="16sp"
         android:layout_marginTop="32dp"/>
@@ -45,7 +45,7 @@
             android:id="@+id/rb_vnpay"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Thanh toán qua VNPay"
+            android:text="VNPay"
             android:textColor="@color/white"
             android:drawableStart="@drawable/vnpay_logo"
             android:drawablePadding="16dp"
@@ -54,7 +54,7 @@
         android:id="@+id/rb_momo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Thanh toán qua MoMo"
+        android:text="MoMo"
         android:textColor="@color/white"
         android:drawableStart="@drawable/momo_icon_square_pinkbg"
         android:drawablePadding="16dp"
@@ -69,7 +69,7 @@
     android:id="@+id/btn_proceed_to_payment"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:text="Thanh toán 50,000đ"
+    android:text="Pay 50,000đ"
     android:textSize="16sp"
     app:backgroundTint="#7EBDC2"/>
 

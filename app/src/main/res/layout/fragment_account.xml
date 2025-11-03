@@ -80,6 +80,7 @@
                     android:textColor="@color/white"
                     android:textSize="20sp"
                     android:textStyle="bold" />
+
             </LinearLayout>
 
             <!-- Sign in / Auth button -->
@@ -133,6 +134,7 @@
                 android:layout_marginTop="20dp"
                 android:id="@+id/PRO"
                 style="@style/AccountItemButton"
+                android:visibility="visible"
                 android:text="Upgrade to PRO 👑" />
             <!-- Logout -->
             <Button

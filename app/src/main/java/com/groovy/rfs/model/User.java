@@ -26,6 +26,7 @@ public class User {
     private String email, gender, slug;
     private int role;
     private String avatar;
+    private int join_year,friend_count,rating_count;
 
     public User() {
     }
@@ -44,6 +45,30 @@ public class User {
         this.slug = slug;
         this.status = status;
         this.username = username;
+    }
+
+    public int getFriend_count() {
+        return friend_count;
+    }
+
+    public void setFriend_count(int friend_count) {
+        this.friend_count = friend_count;
+    }
+
+    public int getJoin_year() {
+        return join_year;
+    }
+
+    public void setJoin_year(int join_year) {
+        this.join_year = join_year;
+    }
+
+    public int getRating_count() {
+        return rating_count;
+    }
+
+    public void setRating_count(int rating_count) {
+        this.rating_count = rating_count;
     }
 
     public String getAvatar() {

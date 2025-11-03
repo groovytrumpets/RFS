@@ -152,21 +152,55 @@ public class AccountFragment extends Fragment {
         super.onResume();
         Log.d("DEBUG_ACCOUNT", "1. AccountFragment onResume() called.");
         updateUIBasedOnLoginState();
+
+    }
+
+    private void updateUIBasedOnStatus() {
+        if (AuthUtils.isLoggedIn(getContext())) {
+            // Đã đăng nhập
+
+            // Lấy trạng thái ("active" hay "pro")
+            String status = AuthUtils.getUserStatus(getContext());
+            String uName = AuthUtils.getUserName(getContext());
+            if ("pro".equalsIgnoreCase(status)) {
+                // Nếu là PRO
+                PRO_btn.setVisibility(View.GONE); // Ẩn nút
+                username.setText("Xin chào PRO, " + uName + "! 👑");
+            } else {
+                // Nếu là user thường ("active")
+                PRO_btn.setVisibility(View.VISIBLE); // Hiện nút
+            }
+
+        } else {
+            // Chưa đăng nhập
+            PRO_btn.setVisibility(View.GONE);
+        }
     }
 
     private void updateUIBasedOnLoginState() {
         SharedPreferences prefs = requireActivity().getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
         String fullName = prefs.getString("user_fullname", null); // Lấy tên, nếu không có thì là null
-        int email = prefs.getInt("user_id",0);
+        String status = prefs.getString("user_status", null);
 
         Log.d("DEBUG_ACCOUNT", "2. Checking SharedPreferences. FullName found: " + fullName);
         if (fullName != null && !fullName.isEmpty()) {
             Log.d("DEBUG_ACCOUNT", "3. STATUS: LOGGED IN. Setting GONE/VISIBLE.");
+            Log.d("DEBUG_ACCOUNT", "4. STATUS: ACTIVE. Setting VISIBLE.: "+status);
             // Đã đăng nhập
             auth_btn.setVisibility(View.GONE);
             logoutBtn.setVisibility(View.VISIBLE);
             username.setVisibility(View.VISIBLE);
             username.setText("Xin chào, " + fullName + "!"); // <-- Sử dụng fullName ở đây
+            if ("pro".equalsIgnoreCase(status)) {
+                // Nếu là PRO
+                PRO_btn.setVisibility(View.GONE); // Ẩn nút
+                username.setText("Xin chào SIR, " + fullName + "! 👑");
+            } else {
+                // Nếu là user thường ("active")
+
+                PRO_btn.setVisibility(View.VISIBLE); // Hiện nút
+            }
+            updateUIBasedOnStatus();
             String avatarUrl = AuthUtils.getUserAvatarUrl(getContext());
             if (avatarUrl != null && !avatarUrl.isEmpty()){
                 Glide.with(this) // Dùng 'this' vì đang ở trong Fragment

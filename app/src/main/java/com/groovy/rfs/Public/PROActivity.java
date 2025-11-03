@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.RadioGroup;
 import android.widget.Toast;
@@ -54,6 +55,7 @@ public class PROActivity extends AppCompatActivity {
                 result -> {
                     if (result.getResultCode() == Activity.RESULT_OK) {
                         // Quay lại sau khi thanh toán, BẮT ĐẦU KIỂM TRA
+                        Log.d("API_TEST","XONGGGG" );
                         Toast.makeText(PROActivity.this, "Sucess", Toast.LENGTH_SHORT).show();
                         // Lấy orderCode (có thể dùng biến currentOrderCode
                         // hoặc đọc lại từ SharedPreferences)

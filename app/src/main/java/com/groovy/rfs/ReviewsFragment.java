@@ -1,5 +1,6 @@
 package com.groovy.rfs;
 
+import static android.view.View.GONE;
 import static com.groovy.rfs.API.RetrofitUtils.retrofitBuilder;
 
 import android.app.AlertDialog;
@@ -8,6 +9,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -16,8 +18,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.RatingBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.groovy.rfs.API.MovieApiService;
@@ -45,7 +50,7 @@ import retrofit2.Retrofit;
  * Use the {@link ReviewsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ReviewsFragment extends Fragment implements PublicReviewsAdapter.OnPublicReviewInteractionListener {
+public class ReviewsFragment extends Fragment implements PublicReviewsAdapter.OnPublicReviewInteractionListener, CompoundButton.OnCheckedChangeListener {
     @Override
     public void onUsernameClick(PublicReview review) {
         int userId = review.getUser_idUser();
@@ -59,6 +64,9 @@ public class ReviewsFragment extends Fragment implements PublicReviewsAdapter.On
     private PublicReviewsAdapter adapter;
     private List<PublicReview> reviewsData = new ArrayList<>();
     private int currentUserId;
+    private SwitchCompat switchFilter;
+    private TextView tvFilterLabel;
+    LinearLayout filter;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -109,15 +117,36 @@ public class ReviewsFragment extends Fragment implements PublicReviewsAdapter.On
         adapter = new PublicReviewsAdapter(getContext(),currentUserId, this , reviewsData);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
+        switchFilter = view.findViewById(R.id.switch_reviews_filter);
+        tvFilterLabel = view.findViewById(R.id.tv_filter_label);
+        filter = view.findViewById(R.id.ll_filter);
+        switchFilter.setOnCheckedChangeListener(this);
 
         // Gọi API lấy tất cả reviews
-        fetchAllPublicReviews();
+        fetchAllPublicReviews(false);
     }
 
-    private void fetchAllPublicReviews() {
+
+    private void fetchAllPublicReviews(boolean isFriendOnly) {
         Retrofit retrofit = RetrofitUtils.retrofitBuilder();
         MovieApiService apiService = retrofit.create(MovieApiService.class);
-        Call<SerResPublicReviews> call = apiService.getAllPublicReviews();
+        Call<SerResPublicReviews> call;
+
+        if (isFriendOnly){
+            tvFilterLabel.setText("Friend reviews");
+            String token = AuthUtils.getToken(getContext());
+            if (token==null){
+                filter.setVisibility(GONE);
+                Toast.makeText(getContext(), "Please Login", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            call = apiService.getFriendsReviews(token);
+        }else {
+            tvFilterLabel.setText("All review");
+            call = apiService.getAllPublicReviews();
+        }
+
+
 
         call.enqueue(new Callback<SerResPublicReviews>() {
             @Override
@@ -275,5 +304,10 @@ public class ReviewsFragment extends Fragment implements PublicReviewsAdapter.On
                 Toast.makeText(getContext(), "Lỗi mạng", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    @Override
+    public void onCheckedChanged(@NonNull CompoundButton buttonView, boolean isChecked) {
+        fetchAllPublicReviews(isChecked);
     }
 }
