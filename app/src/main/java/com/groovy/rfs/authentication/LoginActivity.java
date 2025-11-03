@@ -268,6 +268,7 @@ public class LoginActivity extends AppCompatActivity {
         editor.putInt("user_id", user.getIdUser());           // Ví dụ lưu ID")
         editor.putString("user_avatar", user.getAvatar());
         // Thêm các trường khác nếu cần
+        editor.putString("user_status", user.getStatus());
         editor.apply();
         Log.d("AUTH_SAVE", "User info saved to SharedPreferences. AvatarURL: " + user.getAvatar());
     }

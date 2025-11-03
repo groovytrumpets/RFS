@@ -1,7 +1,9 @@
 package com.groovy.rfs.Public;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -19,8 +21,17 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.groovy.rfs.API.RetrofitUtils;
+import com.groovy.rfs.API.UserApiService;
 import com.groovy.rfs.R;
 import com.groovy.rfs.authentication.AuthActivity;
+import com.groovy.rfs.authentication.AuthUtils;
+import com.groovy.rfs.model.SerResStatus;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
 public class PaymentWebViewActivity extends AppCompatActivity {
     private WebView webView;
@@ -79,8 +90,15 @@ public class PaymentWebViewActivity extends AppCompatActivity {
                     if ("00".equals(responseCode)) {
                         // THÀNH CÔNG
                         Log.d("API_TEST","responseCode:" + responseCode);
-                        Toast.makeText(PaymentWebViewActivity.this, "Thanh cong", Toast.LENGTH_SHORT).show();
                         setResult(Activity.RESULT_OK);
+                        SharedPreferences prefs = getSharedPreferences("payment_prefs", Context.MODE_PRIVATE);
+                        String orderCodeToCheck = prefs.getString("pending_order_code", null);
+                        if (orderCodeToCheck != null) {
+                            checkPaymentStatus(orderCodeToCheck); // Gọi API 3 (mới)
+                        }else {
+                            Toast.makeText(PaymentWebViewActivity.this, "Giao dịch đã bị hủy", Toast.LENGTH_SHORT).show();
+                        }
+
 
                     } else {
                         Toast.makeText(PaymentWebViewActivity.this, "Fail", Toast.LENGTH_SHORT).show();
@@ -99,6 +117,46 @@ public class PaymentWebViewActivity extends AppCompatActivity {
                 progressBar.setVisibility(View.GONE); // Ẩn loading
 
                 Log.d("WebViewDebug", "Đang cố gắng tải URL: " + url);
+            }
+            private void checkPaymentStatus(String currentOrderCode) {
+                String token = AuthUtils.getToken(PaymentWebViewActivity.this);
+                if (token == null) { /* ... */ return; }
+
+                Toast.makeText(PaymentWebViewActivity.this, "Đang xác nhận thanh toán...", Toast.LENGTH_SHORT).show();
+                Retrofit retrofit = RetrofitUtils.retrofitBuilder();
+                UserApiService apiService = retrofit.create(UserApiService.class);
+                Call<SerResStatus> call = apiService.checkPaymentStatus(token, currentOrderCode);
+
+                call.enqueue(new Callback<SerResStatus>() {
+                    @Override
+                    public void onResponse(Call<SerResStatus> call, Response<SerResStatus> response) {
+                        if (response.isSuccessful() && response.body().getSuccess() == 1) {
+                            String status = response.body().getStatus();
+
+                            if ("completed".equals(status)) {
+                                // THÀNH CÔNG (API 2 đã chạy)
+                                Toast.makeText(PaymentWebViewActivity.this, "Nâng cấp PRO thành công!", Toast.LENGTH_LONG).show();
+                                AuthUtils.updateUserStatus(PaymentWebViewActivity.this, "pro");
+                                finish();
+                            } else if ("pending".equals(status)) {
+                                // (API 2 chưa chạy xong)
+                                Toast.makeText(PaymentWebViewActivity.this, "Đang xử lý, vui lòng đợi...", Toast.LENGTH_SHORT).show();
+                                // (Bạn có thể gọi lại hàm checkPaymentStatus sau 3 giây)
+                            } else {
+                                // "failed"
+                                Toast.makeText(PaymentWebViewActivity.this, "Thanh toán thất bại", Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            Toast.makeText(PaymentWebViewActivity.this, "Không thể kiểm tra trạng thái", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<SerResStatus> call, Throwable t) {
+                        Toast.makeText(PaymentWebViewActivity.this, "Lỗi mạng khi kiểm tra", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
             }
         });
 
