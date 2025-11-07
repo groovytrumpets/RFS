@@ -29,11 +29,14 @@ import com.cloudinary.android.callback.UploadCallback;
 import com.groovy.rfs.API.RetrofitUtils;
 import com.groovy.rfs.API.UserApiService;
 import com.groovy.rfs.Public.PROActivity;
+import com.groovy.rfs.User.FriendsListActivity;
 import com.groovy.rfs.User.ListUserActivity;
+import com.groovy.rfs.User.ReportListActivity;
 import com.groovy.rfs.User.ReviewsUserActivity;
 import com.groovy.rfs.User.UserProfileActivity;
 import com.groovy.rfs.authentication.AuthActivity;
 import com.groovy.rfs.authentication.AuthUtils;
+import com.groovy.rfs.model.Review;
 import com.groovy.rfs.model.SerResAvatarUpdate;
 
 import java.io.IOException;
@@ -51,7 +54,7 @@ import retrofit2.Retrofit;
  * create an instance of this fragment.
  */
 public class AccountFragment extends Fragment {
-    Button auth_btn,logoutBtn, viewListBtn, myReviewsBtn,PRO_btn;
+    Button auth_btn,logoutBtn, viewListBtn, myReviewsBtn,PRO_btn, friendListBtn, reportListBtn;
     ImageView avatar;
     TextView username;
 
@@ -109,12 +112,21 @@ public class AccountFragment extends Fragment {
         avatar = view.findViewById(R.id.avatar);
         myReviewsBtn = view.findViewById(R.id.myReviewsbtn);
         PRO_btn = view.findViewById(R.id.PRO);
+        friendListBtn = view.findViewById(R.id.myFriends);
+        reportListBtn = view.findViewById(R.id.myReports);
         avatar.setOnClickListener(v -> {
             Intent intent = new Intent(Intent.ACTION_PICK);
             intent.setType("image/*");
             pickImageLauncher.launch(intent);
         });
-
+        reportListBtn.setOnClickListener(v -> {
+            Intent reviewOfUser = new Intent(getActivity(), ReportListActivity.class);
+            startActivity(reviewOfUser);
+        });
+        friendListBtn.setOnClickListener(v -> {
+            Intent reviewOfUser = new Intent(getActivity(), FriendsListActivity.class);
+            startActivity(reviewOfUser);
+        });
         myReviewsBtn.setOnClickListener(v -> {
             Intent reviewOfUser = new Intent(getActivity(), ReviewsUserActivity.class);
             startActivity(reviewOfUser);
@@ -218,7 +230,23 @@ public class AccountFragment extends Fragment {
             // Chưa đăng nhập
             auth_btn.setVisibility(View.VISIBLE);
             logoutBtn.setVisibility(View.GONE);
-            username.setVisibility(View.GONE);
+            username.setVisibility(View.VISIBLE);
+            PRO_btn.setVisibility(View.GONE);
+            myReviewsBtn.setVisibility(View.GONE);
+            viewListBtn.setVisibility(View.GONE);
+            friendListBtn.setVisibility(View.GONE);
+            reportListBtn.setVisibility(View.GONE);
+
+            username.setOnClickListener(null);
+            avatar.setOnClickListener(null);
+            PRO_btn.setOnClickListener(null);
+            myReviewsBtn.setOnClickListener(null);
+            viewListBtn.setOnClickListener(null);
+            friendListBtn.setOnClickListener(null);
+            reportListBtn.setOnClickListener(null);
+
+
+            avatar.setImageResource(R.mipmap.ic_user_defaut);
         }
     }
     private void performLogout() {

@@ -3,9 +3,11 @@ package com.groovy.rfs.API;
 import com.groovy.rfs.model.SerResAvatarUpdate;
 import com.groovy.rfs.model.SerResBasic;
 import com.groovy.rfs.model.SerResFriendStatus;
+import com.groovy.rfs.model.SerResFriendsList;
 import com.groovy.rfs.model.SerResNorify;
 import com.groovy.rfs.model.SerResNotifications;
 import com.groovy.rfs.model.SerResPayment;
+import com.groovy.rfs.model.SerResReports;
 import com.groovy.rfs.model.SerResStatus;
 import com.groovy.rfs.model.SevResUser;
 
@@ -92,6 +94,14 @@ public interface UserApiService {
     );
     @GET("get_unread_count.php")
     Call<SerResNorify> getUnreadNotificationCount(
+            @Header("Authorization") String authToken
+    );
+    @GET("get_my_friends.php")
+    Call<SerResFriendsList> getMyFriends(
+            @Header("Authorization") String authToken
+    );
+    @GET("get_my_reports.php")
+    Call<SerResReports> getMyReports(
             @Header("Authorization") String authToken
     );
 }
