@@ -33,6 +33,7 @@
         android:textColor="#AAAAAA"
         android:textSize="12sp"
         android:text="Your friend"
+        android:visibility="visible"
         app:layout_constraintStart_toStartOf="@id/friendName"
         app:layout_constraintEnd_toEndOf="@id/friendName"
         app:layout_constraintTop_toBottomOf="@id/friendName"

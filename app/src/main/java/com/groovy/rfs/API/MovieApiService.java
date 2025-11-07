@@ -7,6 +7,7 @@ import com.groovy.rfs.model.SerResMyList;
 import com.groovy.rfs.model.SerResPubLists;
 import com.groovy.rfs.model.SerResPublicReviews;
 import com.groovy.rfs.model.SerResReviews;
+import com.groovy.rfs.model.SerResUserSearch;
 
 import retrofit2.Call;
 import retrofit2.http.Field;
@@ -123,6 +124,10 @@ public interface MovieApiService {
             @Header("Authorization") String authToken,
             @Field("rating_id") int ratingId,
             @Field("reason") String reason
+    );
+    @GET("search_users.php")
+    Call<SerResUserSearch> searchUsers(
+            @Query("query") String searchQuery
     );
 
 }
