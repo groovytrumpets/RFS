@@ -8,6 +8,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,13 +19,18 @@ import android.widget.Toast;
 
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.groovy.rfs.API.MovieApiService;
+import com.groovy.rfs.API.RetrofitUtils;
+import com.groovy.rfs.API.UserApiService;
 import com.groovy.rfs.Adapter.AllMoviesAdapter;
 import com.groovy.rfs.Adapter.HomeViewPagerAdapter;
 import com.groovy.rfs.User.NotificationsActivity;
+import com.groovy.rfs.authentication.AuthUtils;
 import com.groovy.rfs.databinding.ActivityMainBinding;
 import com.groovy.rfs.databinding.FragmentHomeBinding;
 import com.groovy.rfs.model.Movie;
+import com.groovy.rfs.model.SerResBasic;
 import com.groovy.rfs.model.SerResMovies;
+import com.groovy.rfs.model.SerResNorify;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,6 +51,10 @@ public class HomeFragment extends Fragment {
     private FragmentHomeBinding binding;
     private TextView notificationBadge;
     private View notification_btn;
+
+    private Handler notificationHandler = new Handler(Looper.getMainLooper());
+    private Runnable notificationRunnable;
+    private final int POLLING_INTERVAL = 1000;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -112,7 +123,16 @@ public class HomeFragment extends Fragment {
             Intent intent = new Intent(getActivity(), NotificationsActivity.class);
             startActivity(intent);
         });
+        notificationRunnable = new Runnable() {
+            @Override
+            public void run() {
+                if (AuthUtils.isLoggedIn(getContext())){
         checkUnreadNotifications();
+
+                }
+                notificationHandler.postDelayed(this,POLLING_INTERVAL);
+            }
+        };
         // Kết nối TabLayout (giả sử ID là tabLayoutHome) với ViewPager2
         new TabLayoutMediator(binding.tabLayoutHome, binding.viewPagerHome, (tab, position) -> {
             // Đặt tên cho các tab
@@ -131,15 +151,59 @@ public class HomeFragment extends Fragment {
     }
 
     private void checkUnreadNotifications() {
-        int unreadCount = 0;// test ui
+        String token = AuthUtils.getToken(getContext());
+        if (token == null) return;
+        Retrofit retrofit = RetrofitUtils.retrofitBuilder();
+        UserApiService apiService = retrofit.create(UserApiService.class);
+        Call<SerResNorify> call = apiService.getUnreadNotificationCount(token);
 
-        if (getContext() == null) return;
+        call.enqueue(new Callback<SerResNorify>() {
+            @Override
+            public void onResponse(Call<SerResNorify> call, Response<SerResNorify> response) {
+                if (response.isSuccessful() && response.body().getSuccess() == 1) {
+                    updateBadgeUI(response.body().getUnread_count());
+                }
+            }
 
-        if (unreadCount > 0) {
-            notificationBadge.setText(String.valueOf(unreadCount));
+            @Override
+            public void onFailure(Call<SerResNorify> call, Throwable t) {
+
+            }
+        });
+
+
+//        int unreadCount = 3;
+//
+//        if (getContext() == null) return;
+//
+//        if (unreadCount > 0) {
+//            notificationBadge.setText(String.valueOf(unreadCount));
+//            notificationBadge.setVisibility(View.VISIBLE);
+//        } else {
+//            notificationBadge.setVisibility(View.GONE);
+//        }
+    }
+
+    private void updateBadgeUI(int count) {
+        if (notificationBadge == null) return;
+        //Log.d("API_TEST", "count: " + count + "");
+        if (count > 0) {
+            notificationBadge.setText(String.valueOf(count));
             notificationBadge.setVisibility(View.VISIBLE);
         } else {
             notificationBadge.setVisibility(View.GONE);
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        notificationHandler.post(notificationRunnable);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        notificationHandler.removeCallbacks(notificationRunnable);
     }
 }

@@ -67,7 +67,7 @@ public class UserProfileActivity extends AppCompatActivity {
         userIdToLoad = getIntent().getIntExtra("USER_ID", -1);
 //        Log.d("API_TEST", "myUserId: " + myUserId + "");
 //        Log.d("API_TEST", "userIdToLoad: " + userIdToLoad + "");
-        if (userIdToLoad == myUserId) {
+        if (userIdToLoad == -1) {
             loadUserProfileFromApi(myUserId);
         } else {
             loadUserProfileFromApi(userIdToLoad);

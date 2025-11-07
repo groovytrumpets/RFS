@@ -117,5 +117,12 @@ public interface MovieApiService {
     Call<SerResPubLists> getFriendsLists(
             @Header("Authorization") String authToken // Cần token
     );
+    @FormUrlEncoded
+    @POST("report_review.php")
+    Call<SerResBasic> reportReview(
+            @Header("Authorization") String authToken,
+            @Field("rating_id") int ratingId,
+            @Field("reason") String reason
+    );
 
 }

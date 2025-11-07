@@ -249,6 +249,50 @@ public class ReviewFragment extends Fragment implements ReviewsAdapter.OnReviewI
     }
 
     @Override
+    public void onReportReviewClicked(Review review, int position) {
+        final String[] reasons = {"Spam", "Hate Speech", "Inappropriate", "Other"};
+        final String[] reasonKeys = {"spam", "hate_speech", "inappropriate", "other"};
+
+        new AlertDialog.Builder(getContext())
+                .setTitle("Báo cáo đánh giá")
+                .setItems(reasons, (dialog, which) -> {
+                    // 'which' là vị trí (0, 1, 2, 3)
+                    String selectedReason = reasonKeys[which];
+                    // Gọi hàm thực hiện báo cáo
+                    performReportReview(review.getIdRating(), selectedReason);
+                })
+                .setNegativeButton("Hủy", null)
+                .show();
+    }
+
+    private void performReportReview(int idRating, String selectedReason) {
+        String token = AuthUtils.getToken(getContext());
+        if (token == null) {
+            Toast.makeText(getContext(), "Vui lòng đăng nhập để báo cáo", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        Retrofit retrofit = retrofitBuilder();
+        MovieApiService apiService = retrofit.create(MovieApiService.class);
+        Call<SerResBasic> call = apiService.reportReview(token, idRating, selectedReason);
+
+        call.enqueue(new Callback<SerResBasic>() {
+            @Override
+            public void onResponse(Call<SerResBasic> call, Response<SerResBasic> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    Toast.makeText(getContext(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getContext(), "Gửi báo cáo thất bại", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<SerResBasic> call, Throwable t) {
+                Toast.makeText(getContext(), "Lỗi mạng", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    @Override
     public void onUsernameClick(Review review) {
         Intent intent = new Intent(getActivity(), UserProfileActivity.class);
         intent.putExtra("USER_ID", review.getIdUser());

@@ -110,6 +110,17 @@ android:paddingHorizontal="16dp"
             android:visibility="gone"
             app:tint="#BA4330"
             tools:visibility="visible" />
+        <ImageButton
+            android:id="@+id/btn_report_public_review"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginTop="8dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/baseline_report_24"
+            android:visibility="visible"
+            app:tint="#A4A4A4"
+            tools:visibility="visible" />
+
     </LinearLayout>
 
     <View

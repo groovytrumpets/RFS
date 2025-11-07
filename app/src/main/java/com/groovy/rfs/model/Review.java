@@ -1,6 +1,7 @@
 package com.groovy.rfs.model;
 
 public class Review {
+    private int idRating;
     private float score;
     private String comment;
     private String username;
@@ -25,6 +26,14 @@ public class Review {
     }
 
     public Review() {
+    }
+
+    public int getIdRating() {
+        return idRating;
+    }
+
+    public void setIdRating(int idRating) {
+        this.idRating = idRating;
     }
 
     public String getComment() {
