@@ -1,5 +1,8 @@
 package com.groovy.rfs;
 
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
+
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -7,11 +10,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.TextView;
@@ -20,9 +25,13 @@ import android.widget.Toast;
 import com.groovy.rfs.API.MovieApiService;
 import com.groovy.rfs.API.RetrofitUtils;
 import com.groovy.rfs.Adapter.AllMoviesAdapter;
+import com.groovy.rfs.Adapter.UserSearchAdapter;
 import com.groovy.rfs.Movie.MovieDetailActivity;
+import com.groovy.rfs.User.UserProfileActivity;
 import com.groovy.rfs.model.Movie;
 import com.groovy.rfs.model.SerResMovies;
+import com.groovy.rfs.model.SerResUserSearch;
+import com.groovy.rfs.model.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,14 +47,17 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * Use the {@link SearchFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class SearchFragment extends Fragment implements AllMoviesAdapter.OnMovieClickListener {
+public class SearchFragment extends Fragment implements AllMoviesAdapter.OnMovieClickListener, UserSearchAdapter.OnUserClickListener {
+    private LinearLayout movieCap,userCap;
     private SearchView searchView;
-    private RecyclerView recyclerView;
+    private RecyclerView recyclerView,rvUserResults;
     private ProgressBar loadingSpinner;
     private TextView tvNoResults;
 
     private AllMoviesAdapter moviesAdapter;
     private List<Movie> movieListData = new ArrayList<>();
+    private List<User> userListData = new ArrayList<>();
+    private UserSearchAdapter userAdapter;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -97,16 +109,27 @@ public class SearchFragment extends Fragment implements AllMoviesAdapter.OnMovie
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         // 1. Ánh xạ Views
+        movieCap = view.findViewById(R.id.movieRV);
+        userCap = view.findViewById(R.id.userRv);
+
         searchView = view.findViewById(R.id.search_view);
         recyclerView = view.findViewById(R.id.search_results_recyclerview);
         loadingSpinner = view.findViewById(R.id.loading_spinner);
         tvNoResults = view.findViewById(R.id.tv_search_result);
+        rvUserResults = view.findViewById(R.id.search_user_recyclerview);
+
+
 
         // 2. Cài đặt RecyclerView (Tái sử dụng AllMoviesAdapter)
         moviesAdapter = new AllMoviesAdapter(getContext(), this, movieListData);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3)); // 3 cột
         recyclerView.setAdapter(moviesAdapter);
+        recyclerView.setNestedScrollingEnabled(false);
 
+        userAdapter = new UserSearchAdapter(getContext(), this, userListData);
+        rvUserResults.setLayoutManager(new LinearLayoutManager(getContext()));
+        rvUserResults.setAdapter(userAdapter);
+        rvUserResults.setNestedScrollingEnabled(false);
         // 3. Cài đặt Listener cho SearchView
         setupSearchListener();
     }
@@ -119,6 +142,7 @@ public class SearchFragment extends Fragment implements AllMoviesAdapter.OnMovie
             public boolean onQueryTextSubmit(String query) {
                 if (query != null && !query.trim().isEmpty()) {
                     performSearch(query.trim());
+                    performUserSearch(query.trim());
                     searchView.clearFocus(); // Ẩn bàn phím đi
                 }
                 return true; // Đã xử lý
@@ -136,6 +160,38 @@ public class SearchFragment extends Fragment implements AllMoviesAdapter.OnMovie
         });
 
     }
+
+    private void performUserSearch(String trim) {
+        Retrofit retrofit = RetrofitUtils.retrofitBuilder();
+MovieApiService apiService = retrofit.create(MovieApiService.class);
+
+Call<SerResUserSearch> call = apiService.searchUsers(trim);
+call.enqueue(new Callback<SerResUserSearch>() {
+    @Override
+    public void onResponse(Call<SerResUserSearch> call, Response<SerResUserSearch> response) {
+        if (response.isSuccessful() && response.body().getSuccess() == 1) {
+            List<User> results = response.body().getUsers();
+            if (results != null && !results.isEmpty()) {
+
+                userListData.clear();
+                userListData.addAll(results);
+                userAdapter.notifyDataSetChanged();
+                userCap.setVisibility(VISIBLE);
+            }else {
+                userCap.setVisibility(GONE);
+                userListData.clear();
+                userAdapter.notifyDataSetChanged();
+            }
+        }
+    }
+
+    @Override
+    public void onFailure(Call<SerResUserSearch> call, Throwable t) {
+        Toast.makeText(getContext(), "Lỗi khi tìm kiếm", Toast.LENGTH_SHORT).show();
+    }
+});
+    }
+
     public void onMovieClick(Movie movie) {
         Intent intent = new Intent(getActivity(), MovieDetailActivity.class);
         intent.putExtra("MOVIE_ID", movie.getIdMovie());
@@ -149,9 +205,9 @@ public class SearchFragment extends Fragment implements AllMoviesAdapter.OnMovie
 
     private void performSearch(String query) {
         // Hiển thị loading, ẩn kết quả cũ
-        loadingSpinner.setVisibility(View.VISIBLE);
-        recyclerView.setVisibility(View.GONE);
-        tvNoResults.setVisibility(View.GONE);
+        loadingSpinner.setVisibility(VISIBLE);
+        recyclerView.setVisibility(GONE);
+        tvNoResults.setVisibility(GONE);
         Retrofit retrofit = RetrofitUtils.retrofitBuilder();
         // Lấy ApiService
         MovieApiService apiService = retrofit.create(MovieApiService.class);
@@ -163,20 +219,21 @@ public class SearchFragment extends Fragment implements AllMoviesAdapter.OnMovie
             @Override
             public void onResponse(Call<SerResMovies> call, Response<SerResMovies> response) {
                 // Tắt loading
-                loadingSpinner.setVisibility(View.GONE);
+                loadingSpinner.setVisibility(GONE);
 
                 if (response.isSuccessful() && response.body() != null && response.body().getSuccess() == 1) {
                     List<Movie> results = response.body().getMovies();
 
                     if (results != null && !results.isEmpty()) {
                         // Tìm thấy kết quả
-                        recyclerView.setVisibility(View.VISIBLE); // Hiện RecyclerView
+                        recyclerView.setVisibility(VISIBLE); // Hiện RecyclerView
                         movieListData.clear();
                         movieListData.addAll(results);
                         moviesAdapter.notifyDataSetChanged();
+                        movieCap.setVisibility(VISIBLE);
                     } else {
                         // Không tìm thấy kết quả
-                        tvNoResults.setVisibility(View.VISIBLE); // Hiện "Không tìm thấy"
+                        movieCap.setVisibility(GONE); // Hiện "Không tìm thấy"
                         movieListData.clear();
                         moviesAdapter.notifyDataSetChanged(); // Xóa kết quả cũ
                     }
@@ -188,9 +245,16 @@ public class SearchFragment extends Fragment implements AllMoviesAdapter.OnMovie
 
             @Override
             public void onFailure(Call<SerResMovies> call, Throwable t) {
-                loadingSpinner.setVisibility(View.GONE);
+                loadingSpinner.setVisibility(GONE);
                 Toast.makeText(getContext(), "Lỗi mạng: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    @Override
+    public void onUserClick(User user) {
+        Intent intent = new Intent(getActivity(), UserProfileActivity.class);
+        intent.putExtra("USER_ID", user.getIdUser()); // Gửi ID của user
+        startActivity(intent);
     }
 }
