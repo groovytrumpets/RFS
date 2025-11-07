@@ -38,6 +38,10 @@ public class AuthActivity extends AppCompatActivity {
         cancel_btn.setOnClickListener(v -> {
             finish();
         });
+        tour_btn.setOnClickListener(v -> {
+            Intent tourIntent = new Intent(AuthActivity.this, ForgetPassActivity.class);
+            startActivity(tourIntent);
+        });
 
         createAcc_btn.setOnClickListener(v -> {
             Intent createAccIntent = new Intent(AuthActivity.this, CreateAccountActivity.class);

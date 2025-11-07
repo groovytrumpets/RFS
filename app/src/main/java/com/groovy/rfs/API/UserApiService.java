@@ -104,4 +104,15 @@ public interface UserApiService {
     Call<SerResReports> getMyReports(
             @Header("Authorization") String authToken
     );
+    @FormUrlEncoded
+    @POST("request_password_reset.php")
+    Call<SerResBasic> requestPasswordReset(@Field("email") String email);
+
+    @FormUrlEncoded
+    @POST("reset_password_with_otp.php")
+    Call<SerResBasic> resetPasswordWithOtp(
+            @Field("email") String email,
+            @Field("otp_code") String otp,
+            @Field("new_password") String newPassword
+    );
 }
