@@ -116,17 +116,19 @@
 
             <!-- Following -->
             <Button
-                android:id="@+id/myFollowingbtn"
+                android:id="@+id/myFriends"
                 style="@style/AccountItemButton"
+                android:visibility="visible"
                 android:text="Friends" />
 
             <View style="@style/DividerLine" />
 
             <!-- Followers -->
             <Button
-                android:id="@+id/myFollowerbtn"
+                android:id="@+id/myReports"
                 style="@style/AccountItemButton"
-                android:text="Feedback" />
+                android:visibility="visible"
+                android:text="Reports" />
 
             <View style="@style/DividerLine" />
 

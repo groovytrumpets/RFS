@@ -241,7 +241,7 @@ public class ReviewsFragment extends Fragment implements PublicReviewsAdapter.On
         final String[] reasonKeys = {"spam", "hate_speech", "inappropriate", "other"};
 
         new AlertDialog.Builder(getContext())
-                .setTitle("Báo cáo đánh giá")
+                .setTitle("Report")
                 .setItems(reasons, (dialog, which) -> {
                     // 'which' là vị trí (0, 1, 2, 3)
                     String selectedReason = reasonKeys[which];

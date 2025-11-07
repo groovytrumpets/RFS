@@ -31,6 +31,8 @@
         android:text="Mô tả ngắn"
         android:textSize="14sp"
         android:textColor="#CCCCCC"
+        android:maxLines="6"
+        android:ellipsize="end"
         android:layout_marginTop="4dp"/>
 </LinearLayout>
     <LinearLayout
