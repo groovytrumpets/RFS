@@ -3,6 +3,7 @@ package com.groovy.rfs.API;
 import com.groovy.rfs.model.SerResAvatarUpdate;
 import com.groovy.rfs.model.SerResBasic;
 import com.groovy.rfs.model.SerResFriendStatus;
+import com.groovy.rfs.model.SerResNorify;
 import com.groovy.rfs.model.SerResNotifications;
 import com.groovy.rfs.model.SerResPayment;
 import com.groovy.rfs.model.SerResStatus;
@@ -88,5 +89,9 @@ public interface UserApiService {
     Call<SerResStatus> checkPaymentStatus(
             @Header("Authorization") String authToken,
             @Query("order_code") String orderCode
+    );
+    @GET("get_unread_count.php")
+    Call<SerResNorify> getUnreadNotificationCount(
+            @Header("Authorization") String authToken
     );
 }
