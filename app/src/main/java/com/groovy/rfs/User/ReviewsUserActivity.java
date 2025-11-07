@@ -201,6 +201,51 @@ public class ReviewsUserActivity extends AppCompatActivity implements PublicRevi
     }
 
     @Override
+    public void onReportClick(PublicReview review, int position) {
+        final String[] reasons = {"Spam", "Hate Speech", "Inappropriate", "Other"};
+        final String[] reasonKeys = {"spam", "hate_speech", "inappropriate", "other"};
+
+        new AlertDialog.Builder(this)
+                .setTitle("Báo cáo đánh giá")
+                .setItems(reasons, (dialog, which) -> {
+                    // 'which' là vị trí (0, 1, 2, 3)
+                    String selectedReason = reasonKeys[which];
+                    // Gọi hàm thực hiện báo cáo
+                    performReportReview(review.getIdRating(), selectedReason);
+                })
+                .setNegativeButton("Hủy", null)
+                .show();
+    }
+
+    private void performReportReview(int idRating, String selectedReason) {
+        String token = AuthUtils.getToken(this);
+        if (token == null) {
+            Toast.makeText(this, "Vui lòng đăng nhập để báo cáo", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        Retrofit retrofit = retrofitBuilder();
+        MovieApiService apiService = retrofit.create(MovieApiService.class);
+        Call<SerResBasic> call = apiService.reportReview(token, idRating, selectedReason);
+
+        call.enqueue(new Callback<SerResBasic>() {
+            @Override
+            public void onResponse(Call<SerResBasic> call, Response<SerResBasic> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    Toast.makeText(ReviewsUserActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(ReviewsUserActivity.this, "Gửi báo cáo thất bại", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<SerResBasic> call, Throwable t) {
+                Toast.makeText(ReviewsUserActivity.this, "API error", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
+
+    @Override
     public void onUsernameClick(PublicReview review) {
         int userId = review.getUser_idUser();
         Intent intent = new Intent(this, UserProfileActivity.class);

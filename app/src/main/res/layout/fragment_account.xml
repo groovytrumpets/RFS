@@ -118,7 +118,7 @@
             <Button
                 android:id="@+id/myFollowingbtn"
                 style="@style/AccountItemButton"
-                android:text="Following" />
+                android:text="Friends" />
 
             <View style="@style/DividerLine" />
 
@@ -126,7 +126,7 @@
             <Button
                 android:id="@+id/myFollowerbtn"
                 style="@style/AccountItemButton"
-                android:text="Followers" />
+                android:text="Feedback" />
 
             <View style="@style/DividerLine" />
 

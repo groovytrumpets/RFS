@@ -27,6 +27,7 @@ public class PublicReviewsAdapter extends RecyclerView.Adapter<PublicReviewsAdap
         void onItemClick(PublicReview review); // Click cả item
         void onEditClick(PublicReview review, int position); // Click nút sửa
         void onDeleteClick(PublicReview review, int position); // Click nút xóa
+        void onReportClick(PublicReview review, int position); // Click nút báo cáo
         void onUsernameClick(PublicReview review);
     }
 
@@ -64,9 +65,10 @@ public class PublicReviewsAdapter extends RecyclerView.Adapter<PublicReviewsAdap
 
         // Hiển thị nút sửa/xóa nếu là review của user hiện tại
         if (review.getUser_idUser() == currentUserId) {
+            holder.report.setOnClickListener(null);
             holder.btnEdit.setVisibility(View.VISIBLE);
             holder.btnDelete.setVisibility(View.VISIBLE);
-
+            holder.report.setVisibility(View.GONE);
             holder.btnEdit.setOnClickListener(v -> {
                 if (listener != null) listener.onEditClick(review, holder.getAdapterPosition());
             });
@@ -74,10 +76,15 @@ public class PublicReviewsAdapter extends RecyclerView.Adapter<PublicReviewsAdap
                 if (listener != null) listener.onDeleteClick(review, holder.getAdapterPosition());
             });
         } else {
+            holder.report.setVisibility(View.VISIBLE);
+            holder.report.setOnClickListener(v -> {
+                if (listener != null) listener.onReportClick(review, holder.getAdapterPosition());
+            });
             holder.btnEdit.setVisibility(View.GONE);
             holder.btnDelete.setVisibility(View.GONE);
             holder.btnEdit.setOnClickListener(null);
             holder.btnDelete.setOnClickListener(null);
+
         }
 
         // Click vào cả item
@@ -101,7 +108,7 @@ public class PublicReviewsAdapter extends RecyclerView.Adapter<PublicReviewsAdap
         TextView tvMovieTitleYear, tvUsername, tvComment;
         ImageView ivAvatar, ivPoster;
         RatingBar rbScore;
-        ImageButton btnEdit, btnDelete;
+        ImageButton btnEdit, btnDelete, report;
 
         ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -113,6 +120,7 @@ public class PublicReviewsAdapter extends RecyclerView.Adapter<PublicReviewsAdap
             tvComment = itemView.findViewById(R.id.tv_review_comment);
             btnEdit = itemView.findViewById(R.id.btn_edit_public_review);
             btnDelete = itemView.findViewById(R.id.btn_delete_public_review);
+            report = itemView.findViewById(R.id.btn_report_public_review);
         }
     }
 }

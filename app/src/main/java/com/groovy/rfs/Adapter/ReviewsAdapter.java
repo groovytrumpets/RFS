@@ -30,7 +30,9 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ViewHold
     public interface OnReviewInteractionListener {
         void onDeleteReviewClicked(Review review, int position);
         void onEditReviewClicked(Review review, int position);
+        void onReportReviewClicked(Review review, int position);
         void onUsernameClick(Review review);
+
     }
     private OnReviewInteractionListener interactionListener;
     public ReviewsAdapter(Context context, List<Review> reviews, int currentUserId, OnReviewInteractionListener interactionListener) {
@@ -101,7 +103,16 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ViewHold
                     interactionListener.onEditReviewClicked(review, holder.getAdapterPosition());
                 }
             });
+            holder.btnReport.setVisibility(View.GONE);
+            holder.btnReport.setOnClickListener(null);
         } else {
+            holder.btnReport.setVisibility(View.VISIBLE);
+            holder.btnReport.setOnClickListener(v -> {
+                if (interactionListener != null) {
+                    interactionListener.onReportReviewClicked(review, holder.getAdapterPosition());
+                }
+            });
+
             holder.btnDelete.setVisibility(View.GONE);
             holder.btnDelete.setOnClickListener(null); // Bỏ listener cũ
             holder.btnEdit.setVisibility(View.GONE);
@@ -116,7 +127,7 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ViewHold
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         ImageView ivAvatar;
-        ImageButton btnDelete,btnEdit;
+        ImageButton btnDelete,btnEdit, btnReport;
         TextView tvUsername, tvComment;
         RatingBar rbRating;
         ViewHolder(@NonNull View itemView) {
@@ -127,6 +138,7 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ViewHold
             rbRating = itemView.findViewById(R.id.rb_rating_display);
             btnDelete = itemView.findViewById(R.id.btn_delete_review);
             btnEdit = itemView.findViewById(R.id.btn_edit_review);
+            btnReport = itemView.findViewById(R.id.btn_report_review);
         }
     }
 }
